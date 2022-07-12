@@ -1,10 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Fiss.Enums;
-using Fiss.Query;
-using Fiss.Request;
-using Fiss.Response;
-
-namespace Fiss.Extensions;
+﻿namespace Fiss.Extensions;
 
 /// <summary>
 /// Статическая обертка для IIssRequst 
@@ -81,8 +75,12 @@ public static class IssRequestExtension
 
     public static IIssRequest QueryConvert(this IIssRequest request, IssQueryWrap issQueryWrap, string[] @params)
     {
-        request.FullPath(issQueryWrap.Path, @params);
-        request.AddQueries(issQueryWrap.Queries);
+        if (@params.Any()) request.FullPath(issQueryWrap.Path, @params);
+        else request.FullPath(issQueryWrap.Path);
+
+        if (issQueryWrap.Queries is not null && 
+            issQueryWrap.Queries.Any()) 
+            request.AddQueries(issQueryWrap.Queries);
 
         return request;
     }
