@@ -67,7 +67,9 @@ public static class IssRequestExtension
     }
     public static IIssRequest QueryConvert(this IIssRequest request, IssQueryWrap issQueryWrap)
     {
-        request.FullPath(issQueryWrap.Path);
+        var @params = issQueryWrap.Params ?? Array.Empty<string>();
+        request.FullPath(issQueryWrap.Path, @params);
+
         request.AddQueries(issQueryWrap.Queries);
 
         return request;
