@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <PackageId>Fiss</PackageId>
+	  <Version>0.1.0</Version>
+	  <Authors>Kataane</Authors>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <Title>Fiss</Title>
+	  <Description>Wrapper to facilitate interaction with MOEX ISS.</Description>
+	  <PackageProjectUrl></PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/Kataane/Fiss</RepositoryUrl>
+	  <PackageReleaseNotes>Init</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+</Project>
