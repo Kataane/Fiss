@@ -67,7 +67,7 @@ public static class IssRequestExtension
     }
     public static IIssRequest QueryConvert(this IIssRequest request, IssQueryWrap issQueryWrap)
     {
-        request.FullPath(issQueryWrap.Path, issQueryWrap.Params);
+        request.FullPath(issQueryWrap.Path);
         request.AddQueries(issQueryWrap.Queries);
 
         return request;
@@ -75,12 +75,8 @@ public static class IssRequestExtension
 
     public static IIssRequest QueryConvert(this IIssRequest request, IssQueryWrap issQueryWrap, string[] @params)
     {
-        if (@params.Any()) request.FullPath(issQueryWrap.Path, @params);
-        else request.FullPath(issQueryWrap.Path);
-
-        if (issQueryWrap.Queries is not null && 
-            issQueryWrap.Queries.Any()) 
-            request.AddQueries(issQueryWrap.Queries);
+        request.FullPath(issQueryWrap.Path, @params);
+        request.AddQueries(issQueryWrap.Queries);
 
         return request;
     }
