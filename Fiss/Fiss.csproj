@@ -33,4 +33,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Enums\Queries\" />
+    <Folder Include="Enums\Reports\" />
+  </ItemGroup>
+
 </Project>

@@ -1,15 +1,15 @@
-﻿namespace Fiss.Enums.Markets;
+﻿namespace Fiss.Enums;
 
 /// <summary>
-/// Агро рынок торговой системы
+///     Агро рынок торговой системы
 /// </summary>
 public enum AgroMarket
 {
-	/// <summary>
-	/// Торги сахаром
-	/// <para> 
-	/// Принадлежит к следующей торговой системе <see cref="Engine.Agro"/>. 
-	/// </para> 
-	/// </summary>
-	Sugar = 51,
+    /// <summary>
+    ///     Торги сахаром
+    ///     <para>
+    ///         Принадлежит к следующей торговой системе <see cref="Engine.Agro" />.
+    ///     </para>
+    /// </summary>
+    Sugar = 51
 }

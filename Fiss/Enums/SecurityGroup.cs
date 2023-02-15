@@ -1,107 +1,107 @@
 ﻿namespace Fiss.Enums;
 
 /// <summary>
-/// Группа ценных бумаг
+///     Securities groups
 /// </summary>
 public enum SecurityGroup
 {
     /// <summary>
-    /// Индексы
+    ///     Indices
     /// </summary>
     StockIndex = 12,
 
     /// <summary>
-    /// Акции
+    ///     Stocks
     /// </summary>
     StockShares = 4,
 
     /// <summary>
-    /// Облигации
+    ///     Bonds
     /// </summary>
     StockBonds = 3,
 
     /// <summary>
-    /// Валюта
+    ///     Currency
     /// </summary>
     CurrencySelt = 9,
 
     /// <summary>
-    /// Фьючерсы
+    ///     Futures
     /// </summary>
     FuturesForts = 10,
 
     /// <summary>
-    /// Опционы
+    ///     Options
     /// </summary>
     FuturesOptions = 26,
 
     /// <summary>
-    /// Депозитарные расписки
+    ///     Depositary receipts
     /// </summary>
     StockDr = 18,
 
     /// <summary>
-    /// Иностранные ц.б.
+    ///     Foreign issuers shares
     /// </summary>
     StockForeignShares = 33,
 
     /// <summary>
-    /// Еврооблигации
+    ///     Eurobonds
     /// </summary>
     StockEurobond = 6,
 
     /// <summary>
-    /// Паи ПИФов
+    ///     Investment shares
     /// </summary>
     StockPpif = 5,
 
     /// <summary>
-    /// Биржевые фонды
+    ///     Exchange traded funds
     /// </summary>
     StockEtf = 20,
 
     /// <summary>
-    /// Драгоценные металлы
+    ///     Precious metal
     /// </summary>
     CurrencyMetal = 24,
 
     /// <summary>
-    /// Квал. инвесторы
+    ///     Qualified investors
     /// </summary>
     StockQnv = 21,
 
     /// <summary>
-    /// Клиринговые сертификаты участия
+    ///     General collateral certificates
     /// </summary>
     StockGcc = 27,
 
     /// <summary>
-    /// Депозиты с ЦК
+    ///     Deposit CCP
     /// </summary>
     StockDeposit = 29,
 
     /// <summary>
-    /// Бивалютная корзина
+    ///     Bi-currency basket
     /// </summary>
     CurrencyBasket = 17,
 
     /// <summary>
-    /// Валютный фьючерс
+    ///     Currency futures
     /// </summary>
     CurrencyFutures = 28,
 
     /// <summary>
-    /// Валютные фиксинги
+    ///     Currency fixings
     /// </summary>
     CurrencyIndices = 31,
 
     /// <summary>
-    /// Товарные активы
+    ///     Commodity assets
     /// </summary>
     AgroCommodities = 40,
 
     /// <summary>
-    /// Ипотечный сертификат
+    ///     Mortgage note
     /// </summary>
     StockMortgage = 22
 }

@@ -1,220 +1,283 @@
+п»їusing System.Runtime.CompilerServices;
+using Fiss.Enums;
+
 namespace Fiss.Request;
 
 /// <summary>
-/// Статическая обертка для IIssRequst 
-/// для создания цепочки обязанностей.
-/// В данном классе реализованны методы
-/// построения путей.
+///     Class for constructing a query to ISS MOEX
 /// </summary>
 /// <example>
-/// <code>
-/// var requst = new IssRequest().Securities();
-/// var longRequst = new IssRequest().History().Otc().Providers().Nsd().Markets();
-/// </code>
+///     <code>
+///         var requst = new IssRequest().Securities();
+///         var longRequst = new IssRequest().History().Otc().Providers().Nsd().Markets();
+///     </code>
 /// </example>
-public static partial class IssRequestExtension
+public static class IssRequestBuilder
 {
-	/// <summary>
-	/// Добавляет в общий массив путей, путь futoi
-	/// </summary>
-	public static IIssRequest Futoi(this IIssRequest request) => Returner(request, "futoi");
+    public static IIssRequest Bondization(this IIssRequest request) => request.MethodNameToPath();
 
-	/// <summary>
-	/// Добавляет в общий массив путей, путь netflow2
-	/// </summary>
-	public static IIssRequest Netflow2(this IIssRequest request) => Returner(request, "netflow2");
+    public static IIssRequest Futoi(this IIssRequest request) => request.MethodNameToPath();
 
-	/// <summary>
-	/// Добавляет в общий массив путей, путь analyticalproducts
-	/// </summary>
-	public static IIssRequest AnalyticalProducts(this IIssRequest request) => Returner(request, "analyticalproducts");
+    public static IIssRequest Netflow2(this IIssRequest request) => request.MethodNameToPath();
 
-	/// <summary>
-	/// Добавляет в общий массив путей, путь indicativerates
-	/// </summary>
-	public static IIssRequest IndicativeRates(this IIssRequest request) => Returner(request, "indicativerates");
+    public static IIssRequest AnalyticalProducts(this IIssRequest request) => request.MethodNameToPath();
 
-	/// <summary>
-	/// Добавляет в общий массив путей, путь futures
-	/// </summary>
-	public static IIssRequest Futures(this IIssRequest request) => Returner(request, "futures");
+	public static IIssRequest IndicativeRates(this IIssRequest request) => request.MethodNameToPath();
 
-	/// <summary>
-	/// Добавляет в общий массив путей, путь fixing
-	/// </summary>
-	public static IIssRequest Fixing(this IIssRequest request) => Returner(request, "fixing");
+	public static IIssRequest Futures(this IIssRequest request) => request.MethodNameToPath();
 
-	/// <summary>
-	/// Добавляет в общий массив путей, путь ReportName
-	/// </summary>
-	public static IIssRequest ReportName(this IIssRequest request, string reportName) => Returner(request, $"{reportName}");
+	public static IIssRequest Fixing(this IIssRequest request) => request.MethodNameToPath();
 
-	/// <summary>
-	/// Добавляет в общий массив путей, путь derivatives
-	/// </summary>
-	public static IIssRequest Derivatives(this IIssRequest request) => Returner(request, "derivatives");
+	public static IIssRequest ReportName(this IIssRequest request, ReportType reportName) => request.MethodNameToPath(reportName.ToString());
 
-	public static IIssRequest Filters(this IIssRequest request) => Returner(request, "filters");
+	public static IIssRequest Derivatives(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Irr(this IIssRequest request) => Returner(request, "irr");
+	public static IIssRequest Filters(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Objects(this IIssRequest request) => Returner(request, "objects");
+	public static IIssRequest Irr(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Rms(this IIssRequest request) => Returner(request, "rms");
+	public static IIssRequest Objects(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Totals(this IIssRequest request) => Returner(request, "totals");
+	public static IIssRequest Rms(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Capitalization(this IIssRequest request) => Returner(request, "capitalization");
+	public static IIssRequest Totals(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Ticker(this IIssRequest request, string ticker) => Returner(request, $"{ticker}");
+	public static IIssRequest Capitalization(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Tickers(this IIssRequest request) => Returner(request, "tickers");
+    #region Tickers
 
-	public static IIssRequest Indexid(this IIssRequest request, string Indexid) => Returner(request, $"{Indexid}");
+    public static IIssRequest Tickers(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Bonds(this IIssRequest request) => Returner(request, "bonds");
+    public static IIssRequest Tickers(this IIssRequest request, string ticker) => request.MethodNameToPath(additionalPath: ticker);
 
-	public static IIssRequest EventId(this IIssRequest request, string eventId) => Returner(request, $"{eventId}");
+    #endregion
 
-	public static IIssRequest Events(this IIssRequest request) => Returner(request, "events");
+    public static IIssRequest Bonds(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest NewsId(this IIssRequest request, string newsId) => Returner(request, $"{newsId}");
+    #region Events
+    public static IIssRequest Events(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Sitenews(this IIssRequest request) => Returner(request, "sitenews");
+    public static IIssRequest Events(this IIssRequest request, string eventId) => request.MethodNameToPath(additionalPath: eventId);
 
-	public static IIssRequest Currentprices(this IIssRequest request) => Returner(request, "currentprices");
+    #endregion
 
-	public static IIssRequest Quotedsecurities(this IIssRequest request) => Returner(request, "quotedsecurities");
+    public static IIssRequest NewsId(this IIssRequest request, int newsId) => request.MethodNameToPath(newsId.ToString());
 
-	public static IIssRequest Deviationcoeffs(this IIssRequest request) => Returner(request, "deviationcoeffs");
+    #region SiteNews
 
-	public static IIssRequest Cboper(this IIssRequest request) => Returner(request, "cboper");
+    public static IIssRequest SiteNews(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Dealers(this IIssRequest request) => Returner(request, "dealers");
+    public static IIssRequest SiteNews(this IIssRequest request, string newsId) => request.MethodNameToPath(additionalPath: newsId);
 
-	public static IIssRequest Mirp(this IIssRequest request) => Returner(request, "mirp");
+    #endregion
 
-	public static IIssRequest Repo(this IIssRequest request) => Returner(request, "repo");
+    public static IIssRequest CurrentPrices(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest State(this IIssRequest request) => Returner(request, "state");
+	public static IIssRequest QuotedSecurities(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Splits(this IIssRequest request) => Returner(request, "splits");
+	public static IIssRequest DeviationCoeffs(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Rates(this IIssRequest request) => Returner(request, "rates");
+	public static IIssRequest Cboper(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Selt(this IIssRequest request) => Returner(request, "selt");
+	public static IIssRequest Dealers(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Currency(this IIssRequest request) => Returner(request, "currency");
+	public static IIssRequest Mirp(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Correlations(this IIssRequest request) => Returner(request, "correlations");
+	public static IIssRequest Repo(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Securitytype(this IIssRequest request, string Securitytype) => Returner(request, $"{Securitytype}");
+	public static IIssRequest State(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Securitytypes(this IIssRequest request) => Returner(request, "securitytypes");
+    #region Splits
 
-	public static IIssRequest Collection(this IIssRequest request, string collection) => Returner(request, $"{collection}");
+    public static IIssRequest Splits(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Collections(this IIssRequest request) => Returner(request, "collections");
+    public static IIssRequest Splits(this IIssRequest request, string security) => request.MethodNameToPath(additionalPath: security);
 
-	public static IIssRequest Securitygroup(this IIssRequest request, string Securitygroup) => Returner(request, $"{Securitygroup}");
+    #endregion
 
-	public static IIssRequest Securitygroups(this IIssRequest request) => Returner(request, "securitygroups");
+    public static IIssRequest Rates(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Months(this IIssRequest request) => Returner(request, "months");
+	public static IIssRequest Selt(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Year(this IIssRequest request, string year) => Returner(request, $"{year}");
+	public static IIssRequest Currency(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Period(this IIssRequest request, string period) => Returner(request, $"{period}");
+	public static IIssRequest Correlations(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Years(this IIssRequest request) => Returner(request, "years");
+    #region SecurityGroup
 
-	public static IIssRequest Datatype(this IIssRequest request, string Datatype) => Returner(request, $"{Datatype}");
+    public static IIssRequest SecurityGroups(this IIssRequest request) => request.MethodNameToPath();
+    public static IIssRequest SecurityGroups(this IIssRequest request, SecurityGroup securityGroup) => request.MethodNameToPath(additionalPath: securityGroup.ToString());
 
-	public static IIssRequest Archives(this IIssRequest request) => Returner(request, "archives");
+    #endregion
 
-	public static IIssRequest Dates(this IIssRequest request) => Returner(request, "dates");
+    #region Collections
 
-	public static IIssRequest Yields(this IIssRequest request) => Returner(request, "yields");
+    public static IIssRequest Collections(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Changeover(this IIssRequest request) => Returner(request, "changeover");
+    public static IIssRequest Collections(this IIssRequest request, CollectionType collectionType) => request.MethodNameToPath(additionalPath: collectionType.ToString());
 
-	public static IIssRequest Shares(this IIssRequest request) => Returner(request, "shares");
+    #endregion
 
-	public static IIssRequest Candleborders(this IIssRequest request) => Returner(request, "candleborders");
+    #region SecurityTypes
 
-	public static IIssRequest Candles(this IIssRequest request) => Returner(request, "candles");
+    public static IIssRequest SecurityTypes(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Rusfar(this IIssRequest request) => Returner(request, "rusfar");
+    public static IIssRequest SecurityTypes(this IIssRequest request, SecurityType securityType) => request.MethodNameToPath(additionalPath: securityType.ToString());
 
-	public static IIssRequest Bulletins(this IIssRequest request) => Returner(request, "bulletins");
+    #endregion
 
-	public static IIssRequest Analytics(this IIssRequest request) => Returner(request, "analytics");
+    public static IIssRequest Months(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Securitieslisting(this IIssRequest request) => Returner(request, "securitieslisting");
+	public static IIssRequest Period(this IIssRequest request, Period period) => request.MethodNameToPath(additionalPath: period.ToString());
 
-	public static IIssRequest Stock(this IIssRequest request) => Returner(request, "stock");
+    #region Years
 
-	public static IIssRequest Statistics(this IIssRequest request) => Returner(request, "statistics");
+    public static IIssRequest Years(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Trades(this IIssRequest request) => Returner(request, "trades");
+    public static IIssRequest Years(this IIssRequest request, int year) => request.MethodNameToPath(additionalPath: year.ToString());
 
-	public static IIssRequest Session(this IIssRequest request) => Returner(request, "session");
+    #endregion
 
-	public static IIssRequest Session(this IIssRequest request, string session) => Returner(request, $"{session}");
+    public static IIssRequest DataType(this IIssRequest request, DataType dataType) => request.MethodNameToPath(dataType.ToString());
 
-	public static IIssRequest Sessions(this IIssRequest request) => Returner(request, "sessions");
+	public static IIssRequest Archives(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Orderbook(this IIssRequest request) => Returner(request, "orderbook");
+	public static IIssRequest Dates(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Boardgroup(this IIssRequest request, string boardgroup) => Returner(request, $"{boardgroup}");
+	public static IIssRequest Yields(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Boardgroups(this IIssRequest request) => Returner(request, "boardgroups");
+	public static IIssRequest Changeover(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Board(this IIssRequest request, string board) => Returner(request, $"{board}");
+	public static IIssRequest Shares(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Boards(this IIssRequest request) => Returner(request, "boards");
+	public static IIssRequest CandleBorders(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Listing(this IIssRequest request) => Returner(request, "listing");
+	public static IIssRequest Candles(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Monthly(this IIssRequest request) => Returner(request, "monthly");
+	public static IIssRequest Rusfar(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Daily(this IIssRequest request) => Returner(request, "daily");
+	public static IIssRequest Bulletins(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Nsd(this IIssRequest request) => Returner(request, "nsd");
+    #region Analytics
 
-	public static IIssRequest Providers(this IIssRequest request) => Returner(request, "providers");
+    public static IIssRequest Analytics(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Otc(this IIssRequest request) => Returner(request, "otc");
+    public static IIssRequest Analytics(this IIssRequest request, string indexId) => request.MethodNameToPath(additionalPath: indexId);
 
-	public static IIssRequest History(this IIssRequest request) => Returner(request, "history");
+    #endregion
 
-	public static IIssRequest Index(this IIssRequest request) => Returner(request, "index");
+    public static IIssRequest SecuritiesListing(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Zcyc(this IIssRequest request) => Returner(request, "zcyc");
+	public static IIssRequest Stock(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Columns(this IIssRequest request) => Returner(request, "columns");
+	public static IIssRequest Statistics(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Turnovers(this IIssRequest request) => Returner(request, "turnovers");
+	public static IIssRequest Trades(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Secstats(this IIssRequest request) => Returner(request, "secstats");
+    #region Session
 
-	public static IIssRequest Market(this IIssRequest request, string market) => Returner(request, $"{market}");
+    public static IIssRequest Sessions(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Markets(this IIssRequest request) => Returner(request, "markets");
+    public static IIssRequest Sessions(this IIssRequest request, TradingSession tradingSession) => request.MethodNameToPath(additionalPath: tradingSession.ToString());
 
-	public static IIssRequest Engine(this IIssRequest request, string engine) => Returner(request, $"{engine}");
+    #endregion
 
-	public static IIssRequest Engines(this IIssRequest request) => Returner(request, "engines");
+    public static IIssRequest Orderbook(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Aggregates(this IIssRequest request) => Returner(request, "aggregates");
+    #region BoardGroup
 
-	public static IIssRequest Indices(this IIssRequest request) => Returner(request, "indices");
+	public static IIssRequest BoardGroups(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest Security(this IIssRequest request, string security) => Returner(request, $"{security}");
+	public static IIssRequest BoardGroups(this IIssRequest request, BoardGroup boardGroup) => request.MethodNameToPath(additionalPath: boardGroup.ToString());
 
-	public static IIssRequest Securities(this IIssRequest request) => Returner(request, "securities");
+    #endregion
 
-	private static IIssRequest Returner(IIssRequest request, string path)
+    #region Boards
+
+    public static IIssRequest Boards(this IIssRequest request) => request.MethodNameToPath();
+
+    public static IIssRequest Boards(this IIssRequest request, Board board) => request.MethodNameToPath(additionalPath: board.ToString());
+
+    #endregion
+
+    #region Listing
+
+    public static IIssRequest Listing(this IIssRequest request) => request.MethodNameToPath();
+
+    #endregion
+
+    public static IIssRequest Monthly(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Daily(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Nsd(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Providers(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Otc(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest History(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Index(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Zcyc(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Columns(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Turnovers(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Secstats(this IIssRequest request) => request.MethodNameToPath();
+
+    #region Marktes
+
+	public static IIssRequest Markets(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Markets(this IIssRequest request, AgroMarket agroMarket) => request.MethodNameToPath(additionalPath: agroMarket.ToString());
+
+	public static IIssRequest Markets(this IIssRequest request, CommodityMarket commodityMarket) => request.MethodNameToPath(additionalPath: commodityMarket.ToString());
+
+	public static IIssRequest Markets(this IIssRequest request, CurrencyMarket currencyMarket) => request.MethodNameToPath(additionalPath: currencyMarket.ToString());
+
+	public static IIssRequest Markets(this IIssRequest request, FuturesMarket futuresMarket) => request.MethodNameToPath(additionalPath: futuresMarket.ToString());
+
+	public static IIssRequest Markets(this IIssRequest request, InterventionsMarket interventionsMarket) => request.MethodNameToPath(additionalPath: interventionsMarket.ToString());
+
+	public static IIssRequest Markets(this IIssRequest request, OffboardMarket offboardMarket) => request.MethodNameToPath(additionalPath: offboardMarket.ToString());
+
+	public static IIssRequest Markets(this IIssRequest request, StateMarket stateMarket) => request.MethodNameToPath(additionalPath: stateMarket.ToString());
+
+	public static IIssRequest Markets(this IIssRequest request, StockMarket stockMarket) => request.MethodNameToPath(additionalPath: stockMarket.ToString());
+
+    #endregion
+
+    #region Engine
+
+    public static IIssRequest Engines(this IIssRequest request) => request.MethodNameToPath();
+
+    public static IIssRequest Engines(this IIssRequest request, Engine engine) => request.MethodNameToPath(additionalPath: engine.ToString());
+
+    #endregion
+
+    public static IIssRequest Aggregates(this IIssRequest request) => request.MethodNameToPath();
+
+	public static IIssRequest Indices(this IIssRequest request) => request.MethodNameToPath();
+
+    #region Securities
+
+    public static IIssRequest Securities(this IIssRequest request) => request.MethodNameToPath();
+
+    public static IIssRequest Securities(this IIssRequest request, string securities) => request.MethodNameToPath(additionalPath: securities);
+
+    #endregion
+
+    private static IIssRequest MethodNameToPath(this IIssRequest request, string additionalPath, [CallerMemberName] string path = "")
+    {
+        request.AddPath(path.ToLower());
+        request.AddPath(additionalPath);
+        return request;
+    }
+
+    internal static IIssRequest MethodNameToPath(this IIssRequest request, [CallerMemberName] string path = "")
 	{
 		request.AddPath(path.ToLower());
 		return request;
