@@ -4,7 +4,7 @@
 	  <PackageId>Fiss</PackageId>
 	  <Version>0.1.1</Version>
 	  <Authors>Kataane</Authors>
-	  <TargetFramework>net6.0</TargetFramework>
+	  <TargetFramework>net7.0</TargetFramework>
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <Title>Fiss</Title>
@@ -16,6 +16,7 @@
 	  <PackageReadmeFile>Readme.md</PackageReadmeFile>
 	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
 	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,10 +28,6 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 </Project>

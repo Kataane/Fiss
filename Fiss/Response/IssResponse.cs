@@ -1,14 +1,30 @@
 ﻿namespace Fiss.Response;
 
-/// <summary>
-/// Объект который предаставляет из себя
-/// ответ от ISS Moex
-/// </summary>
-[JsonConverter(typeof(IssResponseJsonConverter))]
-public record IssResponse(IDictionary<string, Table> Tables);
+public class IssResponse : IIssResponse
+{
+    private readonly HttpResponseMessage response;
 
-public record Table(IEnumerable<Header> Headers, IEnumerable<Row> Rows);
+    public IssResponse(HttpResponseMessage response)
+    {
+        this.response = response;
+    }
 
-public record Row(IDictionary<string, object> Values);
+    public async Task<Stream> Read()
+    {
+        return await response.Content.ReadAsStreamAsync();
+    }
 
-public record Header(string Name);
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            response.Dispose();
+        }
+    }
+}
