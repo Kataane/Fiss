@@ -1,8 +1,10 @@
-﻿namespace Fiss.Extensions;
+﻿using System.Globalization;
 
-public static class StringExtensions
+namespace Fiss.Extensions;
+
+internal static class StringExtensions
 {
-    public static string ToPascalCase(this string @string)
+    public static string ToPascalCase(this string? @string)
     {
         var normalize = @string.ToLower().Replace("_", " ");
 
@@ -11,10 +13,4 @@ public static class StringExtensions
 
         return withTitleCase.Replace(" ", "");
     }
-
-    public static bool ContainsWithIgnoreCase(this string source, string @string)
-    {
-        return source.IndexOf(@string, StringComparison.CurrentCultureIgnoreCase) > 0;
-    }
-
 }

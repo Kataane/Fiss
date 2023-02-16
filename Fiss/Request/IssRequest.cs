@@ -1,35 +1,40 @@
-﻿namespace Fiss.Request;
+﻿using Fiss.Enums;
+using Fiss.Response;
+using System.Runtime.CompilerServices;
+
+namespace Fiss.Request;
 
 public class IssRequest : IIssRequest
 {
-    public string Host { get; } = "https://iss.moex.com/iss/";
+    private Guid g = Guid.NewGuid();
 
-    public string Extension { get; private set; } = ".json";
+    private readonly HttpClient httpClient;
+    private readonly string extension  = ".json";
 
-    public IDictionary<string, string> Queries { get; } = 
-        new Dictionary<string, string>();
+    private readonly IDictionary<string, string> queriesStorage = new Dictionary<string, string>();
 
-    public List<string> Paths { get; } = new();
+    private readonly HashSet<string> pathsStorage = new(Constants.MaxPathCount);
 
-    public IssRequest() { }
-
-    public IssRequest(string extension, string host)
+    public IssRequest()
     {
-        Extension = extension;
-        Host = host;
+        httpClient = IssSettings.HttpClient;
+    }
+
+    public IssRequest(Format format, HttpClient? httpClient)
+    {
+        this.httpClient = httpClient ?? IssSettings.HttpClient;
+
+        var defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(0, 1);
+        defaultInterpolatedStringHandler.AppendFormatted(Constants.Dot);
+        defaultInterpolatedStringHandler.AppendFormatted(format);
+        extension = defaultInterpolatedStringHandler.ToStringAndClear();
     }
 
     public virtual void AddPath(string path)
     {
-        if (Paths.Contains(path) || string.IsNullOrEmpty(path)) throw new Exception("");
-        Paths.Add(path);
+        pathsStorage.Add(path);
     }
 
-    /// <summary>
-    /// Добавляет путь в массив путей. 
-    /// Если передаваемый путь уже был добавлен 
-    /// или он пустой, он будет проигнорирован.
-    /// </summary>
     public virtual void AddPaths(IEnumerable<string> paths)
     {
         foreach (var path in paths)
@@ -38,43 +43,85 @@ public class IssRequest : IIssRequest
         }
     }
 
+    public void AddQuery(string key, string value)
+    {
+        queriesStorage.Add(key, value);
+    }
+
     public virtual void AddQuery(KeyValuePair<string, string> query)
     {
-        if (string.IsNullOrEmpty(query.Key) || 
-            string.IsNullOrEmpty(query.Value) || 
-            Queries.ContainsKey(query.Key)) throw new Exception("");
+        ArgumentException.ThrowIfNullOrEmpty(query.Key);
+        ArgumentException.ThrowIfNullOrEmpty(query.Value);
 
-        Queries.Add(query);
+        queriesStorage.Add(query);
+    }
+
+    public bool ContainsQuery(string key)
+    {
+        return queriesStorage.ContainsKey(key);
     }
 
     public virtual void RemoveQuery(string key)
     {
-        Queries.Remove(key);
+        queriesStorage.Remove(key);
     }
 
     public void UpdateQuery(KeyValuePair<string, string> query)
     {
-        if (string.IsNullOrEmpty(query.Key) ||
-            string.IsNullOrEmpty(query.Value) ||
-            !Queries.ContainsKey(query.Key)) throw new Exception("");
+        ArgumentException.ThrowIfNullOrEmpty(query.Key);
+        ArgumentException.ThrowIfNullOrEmpty(query.Value);
 
-        Queries[query.Key] = query.Value;
+        queriesStorage[query.Key] = query.Value;
     }
 
     public virtual void AddQueries(IEnumerable<KeyValuePair<string, string>> queries)
     {
-        if (queries is null) throw new NullReferenceException(nameof(queries));
+        ArgumentNullException.ThrowIfNull(queries);
+
         foreach (var query in queries) AddQuery(query);
     }
 
-    public virtual void ChangeExtension(Extension extension)
+    public async Task<IIssResponse> Fetch()
     {
-        Extension = "." + extension.ToString().ToLower();
+        var response = await httpClient.GetAsync(ToString());
+        return new IssResponse(response);
     }
 
-    public virtual void CleanUp()
+    public override string ToString()
     {
-        Queries.Clear();
-        Paths.Clear();
+        var defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(0, 1);
+        defaultInterpolatedStringHandler.AppendFormatted(Constants.Host);
+
+        if (!pathsStorage.Any()) goto queries;
+
+        foreach (var path in pathsStorage)
+        {
+            defaultInterpolatedStringHandler.AppendFormatted(Constants.Slash);
+            defaultInterpolatedStringHandler.AppendFormatted(path);
+        }
+
+    queries:
+        defaultInterpolatedStringHandler.AppendFormatted(extension);
+
+        if (!queriesStorage.Any()) goto @string;
+
+        defaultInterpolatedStringHandler.AppendFormatted(Constants.Question);
+
+        var firstQuery = queriesStorage.First();
+
+        defaultInterpolatedStringHandler.AppendFormatted(firstQuery.Key);
+        defaultInterpolatedStringHandler.AppendFormatted(Constants.Equals);
+        defaultInterpolatedStringHandler.AppendFormatted(firstQuery.Value);
+
+        foreach (var query in queriesStorage.Skip(1))
+        {
+            defaultInterpolatedStringHandler.AppendFormatted(Constants.Ampersand);
+            defaultInterpolatedStringHandler.AppendFormatted(query.Key);
+            defaultInterpolatedStringHandler.AppendFormatted(Constants.Equals);
+            defaultInterpolatedStringHandler.AppendFormatted(query.Value);
+        }
+        
+    @string:
+        return defaultInterpolatedStringHandler.ToStringAndClear();
     }
 }
