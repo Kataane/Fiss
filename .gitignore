@@ -74,15 +74,14 @@ publish/
 *.pubxml
 *.azurePubxml
 
-# NuGet Packages Directory
-## TODO: If you have NuGet Package Restore enabled, uncomment the next line
-packages/
-## TODO: If the tool you use requires repositories.config, also uncomment the next line
-!packages/repositories.config
-
 # Windows Azure Build Output
 csx/
 *.build.csdef
+
+nuget/tools/*
+nuget/*.nupkg
+nuget/*.unitypackage
+.vs/
 
 # Windows Store app package directory
 AppPackages/
