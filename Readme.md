@@ -1,54 +1,71 @@
-﻿
+﻿RU | [English](./docs/en_US.md)
+
 <div align="center">
 <h1>Fiss</h1>
 <div>
 
-FlueIss - библиотека для взаимодействия с MOEX ISS.
+Fiss - библиотека для строго-типизированного взаимодействия с MOEX ISS.
 
 ## 📥 Установка
+
 Установить можно [Fiss через NuGet](https://www.nuget.org/packages/Fiss):
 ```
 Install-Package Fiss
 ```
+
 Или через .NET Core command line interface:
 ```
 dotnet add package Fiss
 ```
+
 ## 🔧 Использование
-Чтобы начать использовать Fiss необходимо создать:
+
+Чтобы начать использовать Fiss необходимо создать `IssRequest`:
 ```csharp
 var request = new IssRequest();
 ```
+
 Далее необходимо определить путь запроса к ISS MOEX:
 ```csharp
-var request = request.Engines().Engine(Engine.Stock).Markets();
+var request = request.Engines(Engine.Stock).Markets();
 ```
+
 Или
 ```csharp
-var path = "engines/stock/markets";
-var request = request.FullPath(path);
+var path = "engines/stock/markets".Split("/");
+request.AddPaths(path);
 ```
+
 И даже так:
 ```csharp
-var query = IssQueryFactory.Create(IssQuery.Eem, new[] { Engine.Stock});
-var request = request.QueryConvert(query)
+request.AddPathFromFormattedQuery(IssQuery.Acss, "MOEX");
 ```
+
 Добавляем параметры к запросу:
 ```csharp
-request.AddQuery(new KeyValuePair<string, string>("lang", "en"));
+request.AddQuery("lang", "en");
 ```
-После необходимо отправить запрос в MOEX ISS:
-```csharp
-await request.Fetch();
-```
+
 Ответ можно получить так:
 ```csharp
-var respones = request.ToResponse();
+await request.ConvertToAsync<TResult>(IHttpContentSerializer, HttpClient, CancellationToken);
 ```
-или так:
+
+Если данных много, можно получить так:
 ```csharp
-var respones = request.ToDynamic();
+var cursor = await request.ToCursor<TResult>(IHttpContentSerializer, cursorTitle, index, total, PageSize, HttpClient, CancellationToken);
 ```
+
+Или так
+```csharp
+var cursor = await request.ToCursor();
+```
+
+А потом
+```csharp
+await foreach (var page in cursor)
+```
+
 Вуаля! Теперь можно запрашивать любые, даже не задокументированые, данные из ISS MOEX.
 
 ## 📝 License 
