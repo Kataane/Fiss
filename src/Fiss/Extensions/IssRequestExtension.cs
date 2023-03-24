@@ -21,7 +21,7 @@ public static partial class IssRequestExtension
     /// <returns>The modified <see cref="IIssRequest" /> object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IIssRequest AddPathFromFormattedQuery(
-        this IIssRequest request, 
+        this IIssRequest request,
         IssQuery issQuery,
         params object?[] parameters)
     {
@@ -35,17 +35,25 @@ public static partial class IssRequestExtension
     }
 
     /// <summary>
-    ///     Converts the <see cref="IIssRequest" /> to the specified type asynchronously using the specified converter.
+    ///     Converts HTTP response content into the specified type asynchronously.
     /// </summary>
-    /// <typeparam name="TResult">The type to convert the request to.</typeparam>
-    /// <param name="request">The <see cref="IIssRequest" /> object to convert.</param>
-    /// <param name="serializer">The converter to use for the conversion.</param>
-    /// <returns>The converted object of type <typeparamref name="TResult" />.</returns>
+    /// <typeparam name="TResult">The type to which the response content will be converted.</typeparam>
+    /// <param name="request">The <see cref="IIssRequest" /> instance to use for the HTTP request.</param>
+    /// <param name="serializer">The serializer to use for converting the response content into the specified type.</param>
+    /// <param name="client">
+    ///     The <see cref="HttpClient" /> instance to use for the HTTP request. If not provided, uses the
+    ///     default <see cref="IssSettings.HttpClient" /> instance.
+    /// </param>
+    /// <param name="cancellationToken">
+    ///     The <see cref="CancellationToken" /> to use for the HTTP request. Default is
+    ///     <see cref="CancellationToken.None" />.
+    /// </param>
+    /// <returns>The response content converted into the specified type.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<TResult?> ConvertToAsync<TResult>(
         this IIssRequest request,
-        IHttpContentSerializer serializer, 
-        HttpClient? client = null, 
+        IHttpContentSerializer serializer,
+        HttpClient? client = null,
         CancellationToken cancellationToken = default)
     {
         client ??= IssSettings.HttpClient;
@@ -54,14 +62,31 @@ public static partial class IssRequestExtension
     }
 
     /// <summary>
-    ///     Converts the <see cref="IIssRequest" /> to a cursor of pages asynchronously using the
-    ///     <see cref="SystemTextJsonConverter" /> page converter.
+    ///     Converts HTTP response content into a <see cref="PagedCursor{T}" /> of <see cref="Page" /> objects asynchronously.
     /// </summary>
-    /// <param name="request">The <see cref="IIssRequest" /> object to convert.</param>
-    /// <param name="cursorTitle">The title of the cursor to use.</param>
-    /// <param name="index">The index of the cursor to use.</param>
-    /// <param name="pageSize">The size of the pages to use.</param>
-    /// <returns>A cursor of pages.</returns>
+    /// <param name="request">The <see cref="IIssRequest" /> instance to use for the HTTP request.</param>
+    /// <param name="cursorTitle">
+    ///     The title of the cursor to use for pagination. Default is null, in which case the first
+    ///     cursor in the response will be used.
+    /// </param>
+    /// <param name="index">
+    ///     The index of the page to retrieve. Default is null, in which case the index from the cursor will be
+    ///     used.
+    /// </param>
+    /// <param name="total">
+    ///     The total number of pages to retrieve. Default is null, in which case the total from the cursor
+    ///     will be used.
+    /// </param>
+    /// <param name="pageSize">The page size to use for pagination. Default is <see cref="PageSize.Twenty" />.</param>
+    /// <param name="client">
+    ///     The <see cref="HttpClient" /> instance to use for the HTTP request. If not provided, uses the
+    ///     default <see cref="IssSettings.HttpClient" /> instance.
+    /// </param>
+    /// <param name="cancellationToken">
+    ///     The <see cref="CancellationToken" /> to use for the HTTP request. Default is
+    ///     <see cref="CancellationToken.None" />.
+    /// </param>
+    /// <returns>A <see cref="PagedCursor{T}" /> of <see cref="Page" /> object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<PagedCursor<Page>> ToCursor(
         this IIssRequest request,
@@ -74,26 +99,46 @@ public static partial class IssRequestExtension
     {
         var jsonFormat = request.GetQueryValue(Constants.IssJson);
 
-        var extendedJson = !string.IsNullOrEmpty(jsonFormat) && jsonFormat.Equals(Constants.Extended, StringComparison.OrdinalIgnoreCase);
+        var extendedJson = !string.IsNullOrEmpty(jsonFormat) &&
+                           jsonFormat.Equals(Constants.Extended, StringComparison.OrdinalIgnoreCase);
 
         var serializer = extendedJson
             ? IssSettings.PageExtendedJsonSerializerInstance
             : IssSettings.PageCompactJsonSerializerInstance;
 
-        return await request.ToCursor<Page>(serializer, cursorTitle, index, total, pageSize, client, cancellationToken).ConfigureAwait(false);
+        return await request.ToCursor<Page>(serializer, cursorTitle, index, total, pageSize, client, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
-    ///     Converts the <see cref="IIssRequest" /> to a cursor of the specified type asynchronously using the specified
-    ///     converter.
+    ///     Converts an IIssRequest object to a PagedCursor object, which can be used to iterate through a collection of items
+    ///     in a paged manner.
     /// </summary>
-    /// <typeparam name="TResult">The type of object to convert the request to.</typeparam>
-    /// <param name="request">The <see cref="IIssRequest" /> object to convert.</param>
-    /// <param name="serializer">The converter to use for the conversion.</param>
-    /// <param name="cursorTitle">The title of the cursor to use.</param>
-    /// <param name="index">The index of the cursor to use.</param>
-    /// <param name="pageSize">The size of the pages to use.</param>
-    /// <returns>A cursor of objects of type <typeparamref name="TResult" />.</returns>
+    /// <typeparam name="TResult">The type of the items in the paged collection.</typeparam>
+    /// <param name="request">The <see cref="IIssRequest" /> instance to use for the HTTP request.</param>
+    /// <param name="serializer">The IHttpContentSerializer used to deserialize the response content.</param>
+    /// <param name="cursorTitle">
+    ///     The title of the cursor to use for pagination. Default is null, in which case the first
+    ///     cursor in the response will be used.
+    /// </param>
+    /// <param name="index">
+    ///     The index of the page to retrieve. Default is null, in which case the index from the cursor will be
+    ///     used.
+    /// </param>
+    /// <param name="total">
+    ///     The total number of pages to retrieve. Default is null, in which case the total from the cursor
+    ///     will be used.
+    /// </param>
+    /// <param name="pageSize">The page size to use for pagination. Default is <see cref="PageSize.Twenty" />.</param>
+    /// <param name="client">
+    ///     The <see cref="HttpClient" /> instance to use for the HTTP request. If not provided, uses the
+    ///     default <see cref="IssSettings.HttpClient" /> instance.
+    /// </param>
+    /// <param name="cancellationToken">
+    ///     The <see cref="CancellationToken" /> to use for the HTTP request. Default is
+    ///     <see cref="CancellationToken.None" />.
+    /// </param>
+    /// <returns>A <see cref="PagedCursor{T}" /> object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static async Task<PagedCursor<TResult>> ToCursor<TResult>(
         this IIssRequest request,
@@ -114,7 +159,9 @@ public static partial class IssRequestExtension
             cursorConverter = IssSettings.CursorExtendedJsonSerializerInstance;
         }
 
-        var cursors = await request.ConvertToAsync<Dictionary<string, Cursor>>(cursorConverter, client, cancellationToken).ConfigureAwait(false);
+        var cursors = await request
+            .ConvertToAsync<Dictionary<string, Cursor>>(cursorConverter, client, cancellationToken)
+            .ConfigureAwait(false);
 
         ArgumentNullException.ThrowIfNull(cursors);
 
@@ -122,10 +169,10 @@ public static partial class IssRequestExtension
             ? cursors.FirstOrDefault().Value
             : cursors.FirstOrDefault(kvp => kvp.Key.Equals(cursorTitle, StringComparison.OrdinalIgnoreCase)).Value;
 
-        var _index = index ?? cursor.Index;
-        var _total = total ?? cursor.Total;
+        var cursorIndex = index ?? cursor.Index;
+        var cursorTotal = total ?? cursor.Total;
         var url = request.ToString() ?? string.Empty;
 
-        return new PagedCursor<TResult>( _index, _total, pageSize, url, serializer, client);
+        return new PagedCursor<TResult>(cursorIndex, cursorTotal, pageSize, url, serializer, client);
     }
 }

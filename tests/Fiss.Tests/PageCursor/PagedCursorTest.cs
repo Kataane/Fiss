@@ -6,8 +6,8 @@ namespace Fiss.Tests;
 public partial class PagedCursorTest
 {
     public const string BaseUrl = "https://iss.moex.com/iss.json";
-    private readonly Mock<IHttpContentSerializer> httpContentSerializerMock = new(MockBehavior.Strict);
-    private readonly Mock<HttpMessageHandler> handlerMock = new(MockBehavior.Strict);
+    private readonly Mock<IHttpContentSerializer> httpContentSerializerMock = new();
+    private readonly Mock<HttpMessageHandler> handlerMock = new();
     private const string HttpMessageHandlerSendAsyncMethodName = "SendAsync";
 
     [Fact]
@@ -18,9 +18,9 @@ public partial class PagedCursorTest
         // Act
 
         // Assert
-        var exception = Assert.Throws<ArgumentException>(() =>
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
             new PagedCursor<string>(2600, 2500, PageSize.Hundred, BaseUrl, httpContentSerializerMock.Object));
-        Assert.Equal("The index value 2600 cannot be more than total value 2500.", exception.Message);
+        Assert.Equal("The index value 2600 cannot be more than total value 2500. (Parameter 'index')", exception.Message);
     }
 
     [Theory]
@@ -36,9 +36,9 @@ public partial class PagedCursorTest
         // Act
 
         // Assert
-        var exception = Assert.Throws<ArgumentException>(() =>
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
             new PagedCursor<string>(index, total, pageSize, url, httpContentSerializerMock.Object));
-        Assert.Equal($"The size value {finalUrlLength} cannot be more than maxSizeForStackAlloc value 512.",
+        Assert.Equal($"The size value {finalUrlLength} cannot be more than maxSizeForStackAlloc value 512. (Parameter 'size')",
             exception.Message);
     }
 
@@ -50,13 +50,13 @@ public partial class PagedCursorTest
         // Act
 
         // Assert
-        var exception1 = Assert.Throws<ArgumentException>(() =>
+        var exception1 = Assert.Throws<ArgumentOutOfRangeException>(() =>
             new PagedCursor<string>(-1, 2500, PageSize.Hundred, BaseUrl, httpContentSerializerMock.Object));
-        var exception2 = Assert.Throws<ArgumentException>(() =>
+        var exception2 = Assert.Throws<ArgumentOutOfRangeException>(() =>
             new PagedCursor<string>(10, -1, PageSize.Hundred, BaseUrl, httpContentSerializerMock.Object));
 
-        Assert.Equal("The index value cannot be less than 0.", exception1.Message);
-        Assert.Equal("The total value cannot be less than 0.", exception2.Message);
+        Assert.Equal("The index value cannot be less than 0. (Parameter 'index')", exception1.Message);
+        Assert.Equal("The total value cannot be less than 0. (Parameter 'total')", exception2.Message);
     }
 
     [Fact]
