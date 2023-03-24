@@ -3,10 +3,12 @@
 namespace Fiss.Json;
 
 /// <summary>
-///     Converts a JSON response into a Page object using the System.Text.Json library.
+///     Converts a JSON response into a object using the System.Text.Json library.
 /// </summary>
 public class SystemTextJsonConverter : IHttpContentSerializer
 {
+    public static SystemTextJsonConverter Instance { get; } = new();
+
     public JsonSerializerOptions? JsonSerializerOptions { get; init; }
 
     public SystemTextJsonConverter() : this(JsonSerializerOptions.Default)
