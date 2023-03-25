@@ -1,3 +1,5 @@
+name: Build-Test
+
 on:
   workflow_dispatch:
   push:
@@ -9,10 +11,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
+      
       - name: Setup .NET
-        uses: ./.github/actions/setup-dotnet
+        uses: Kataane/Fiss/.github/actions/setup-dotnet@main
         with:
           dotnet-version: |
             7.0.x
-      - run: dotnet build -c Debug
-      - run: dotnet test -c Debug --no-build
+            
+      - name: Build
+        run: dotnet build -c Debug
+        
+      - name: Test        
+        run: dotnet test -c Debug --no-build
