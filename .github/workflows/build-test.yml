@@ -1,5 +1,3 @@
-name: Build-Test
-
 on:
   workflow_dispatch:
   push:
@@ -14,9 +12,7 @@ jobs:
       - name: Setup .NET
         uses: ./.github/actions/setup-dotnet
         with:
-          dotnet-version: '7.0.x'
-        working-directory: ./.github/actions/setup-dotnet
-      - name: Build
-        run: dotnet build -c Debug
-      - name: Test
-        run: dotnet test -c Debug --no-build
+          dotnet-version: |
+            7.0.x
+      - run: dotnet build -c Debug
+      - run: dotnet test -c Debug --no-build
