@@ -8,15 +8,15 @@ on:
 jobs:
   build-dotnet:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./.github/actions/setup-dotnet
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-dotnet
+      - name: Setup .NET
+        uses: ./.github/actions/setup-dotnet
         with:
-          dotnet-version: |
-            7.0.x
-      - run: dotnet build -c Debug
-      - run: dotnet test -c Debug --no-build
+          dotnet-version: '7.0.x'
+        working-directory: ./.github/actions/setup-dotnet
+      - name: Build
+        run: dotnet build -c Debug
+      - name: Test
+        run: dotnet test -c Debug --no-build
