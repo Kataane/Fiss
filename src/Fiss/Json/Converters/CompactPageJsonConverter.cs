@@ -51,8 +51,8 @@ internal class CompactPageJsonConverter : JsonConverter<Page>
             var rows = EnumerableUtilities.CreateRows(data, columns);
 
             var response = new Table(columns, rows);
-            ref var _value = ref CollectionsMarshal.GetValueRefOrAddDefault(responses, header, out var exist);
-            if (!exist) _value = response;
+            ref var @default = ref CollectionsMarshal.GetValueRefOrAddDefault(responses, header, out var exist);
+            if (!exist) @default = response;
         }
 
         return new Page(responses);

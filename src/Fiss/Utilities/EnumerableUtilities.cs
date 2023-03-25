@@ -4,13 +4,13 @@ namespace Fiss;
 
 internal static class EnumerableUtilities
 {
-    internal static IEnumerable<Row> CreateRows(IEnumerable<IEnumerable<JsonElement>> data, IEnumerable<Header> columns)
+    internal static List<Row> CreateRows(IEnumerable<IEnumerable<JsonElement>> data, IEnumerable<Header> columns)
     {
         return data.Select(row => row
                 .Zip(columns, static (value, header) => new KeyValuePair<string, JsonElement>(header.Name, value)))
             .Select(static keyValuePairs =>
                 new Row(keyValuePairs.ToDictionary(static kvp => kvp.Key, 
-                    ConvertJsonElementToTuple)));
+                    ConvertJsonElementToTuple))).ToList();
     }
 
     private static (string Type, string Value) ConvertJsonElementToTuple(KeyValuePair<string, JsonElement> kvp)

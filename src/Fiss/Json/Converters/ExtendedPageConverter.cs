@@ -1,13 +1,19 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Fiss.Json;
 
+/// <summary>
+///     Provides methods to convert a JSON representation of a <see cref="Page" />.
+/// </summary>
 internal class ExtendedPageConverter : JsonConverter<Page>
 {
+    /// <summary>
+    ///     Gets an default instance of the <see cref="ExtendedPageConverter" /> class.
+    /// </summary>
     public static ExtendedPageConverter Instance = new();
 
+    /// <inheritdoc />
     public override Page Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var responses = new Dictionary<string, Table>();
@@ -48,11 +54,12 @@ internal class ExtendedPageConverter : JsonConverter<Page>
         foreach (var key in objects.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>())
         {
             var readOnlySpan = key.AsSpan();
-            var s = StringUtilities.ToPascalCaseInvariant(ref readOnlySpan);
-            yield return new Header(s);
+            var column = StringUtilities.ToPascalCaseInvariant(ref readOnlySpan);
+            yield return new Header(column);
         }
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, Page value, JsonSerializerOptions options)
     {
         throw new NotImplementedException();

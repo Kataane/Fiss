@@ -4,17 +4,18 @@ using System.Text.Json.Serialization;
 namespace Fiss.Json;
 
 /// <summary>
-/// Converts a JSON response from an ISS request into a dictionary of cursors.
+///     Converts a JSON response from an ISS request into a dictionary of cursors.
 /// </summary>
 internal class CompactCursorConverter : JsonConverter<Dictionary<string, Cursor>>
 {
     /// <summary>
-    /// Gets an default instance of the <see cref="CompactCursorConverter"/> class.
+    ///     Gets an default instance of the <see cref="CompactCursorConverter" /> class.
     /// </summary>
     public static CompactCursorConverter Instance = new();
 
-    /// <inheritdoc/>
-    public override Dictionary<string, Cursor> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    /// <inheritdoc />
+    public override Dictionary<string, Cursor> Read(ref Utf8JsonReader reader, Type typeToConvert,
+        JsonSerializerOptions options)
     {
         var cursors = new Dictionary<string, Cursor>();
 
@@ -41,7 +42,7 @@ internal class CompactCursorConverter : JsonConverter<Dictionary<string, Cursor>
         return cursors;
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, Dictionary<string, Cursor> value, JsonSerializerOptions options)
     {
         throw new NotImplementedException();

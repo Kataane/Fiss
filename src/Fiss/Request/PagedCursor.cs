@@ -36,7 +36,7 @@ public struct PagedCursor<TEntity>
         ArgumentNullException.ThrowIfNull(serializer);
 
         this.serializer = serializer;
-        this.index = index;  
+        this.index = index;
         this.total = total;
         this.client = client ?? IssSettings.HttpClient;
         this.pageSize = (int)pageSize;
@@ -57,9 +57,12 @@ public struct PagedCursor<TEntity>
     }
 
     /// <summary>
-    /// Attempts to move the cursor to the next page of results.
+    ///     Attempts to move the cursor to the next page of results.
     /// </summary>
-    /// <returns><Columns>true</Columns> if the cursor was successfully moved to the next page; otherwise, <Columns>false</Columns>.</returns>
+    /// <returns>
+    ///     <Columns>true</Columns> if the cursor was successfully moved to the next page; otherwise,
+    ///     <Columns>false</Columns>.
+    /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryNext()
     {
@@ -72,10 +75,13 @@ public struct PagedCursor<TEntity>
     }
 
     /// <summary>
-    /// Attempts to move to a specific page in the paged data.
+    ///     Attempts to move to a specific page in the paged data.
     /// </summary>
     /// <param name="page">The index of the page to move to.</param>
-    /// <returns><Columns>true</Columns> if the cursor was successfully moved to the specified page; otherwise, <Columns>false</Columns>.</returns>
+    /// <returns>
+    ///     <Columns>true</Columns> if the cursor was successfully moved to the specified page; otherwise,
+    ///     <Columns>false</Columns>.
+    /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryToPage(int page)
     {
@@ -91,12 +97,12 @@ public struct PagedCursor<TEntity>
     }
 
     /// <summary>
-    /// Asynchronously retrieves the entities of the current page.
+    ///     Asynchronously retrieves the entities of the current page.
     /// </summary>
     /// <param name="cancellationToken">CancellationToken to abort the deserialization.</param>
     /// <returns>The results of the current page.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public async ValueTask<TEntity?> GetPageResult(CancellationToken cancellationToken = default)
+    public readonly async ValueTask<TEntity?> GetPageResult(CancellationToken cancellationToken = default)
     {
         if (total == 0) return default;
 
@@ -124,5 +130,8 @@ public struct PagedCursor<TEntity>
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public override string ToString() => string.Concat(url, index);
+    public readonly override string ToString()
+    {
+        return string.Concat(url, index);
+    }
 }

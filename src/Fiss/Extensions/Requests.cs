@@ -283,6 +283,13 @@ public static partial class IssRequestExtension
 
     #endregion
 
+    /// <summary>
+    ///     Adds a method name and an additional path to the existing path of the <paramref name="request" />.
+    /// </summary>
+    /// <param name="request">The <see cref="IIssRequest" /> instance.</param>
+    /// <param name="additionalPath">The additional path to be added to the existing path.</param>
+    /// <param name="path">The name of the method being called (automatically obtained by the compiler).</param>
+    /// <returns>The updated <see cref="IIssRequest" /> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static IIssRequest MethodNameToPath(this IIssRequest request, string additionalPath, [CallerMemberName] string path = "")
     {
@@ -291,10 +298,16 @@ public static partial class IssRequestExtension
         return request;
     }
 
+    /// <summary>
+    ///     Adds the name of the method being called to the existing path of the <paramref name="request" />.
+    /// </summary>
+    /// <param name="request">The <see cref="IIssRequest" /> instance.</param>
+    /// <param name="path">The name of the method being called (automatically obtained by the compiler).</param>
+    /// <returns>The updated <see cref="IIssRequest" /> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static IIssRequest MethodNameToPath(this IIssRequest request, [CallerMemberName] string path = "")
-	{
-		request.AddPath(path.ToLowerInvariant());
-		return request;
-	}
+    {
+        request.AddPath(path.ToLowerInvariant());
+        return request;
+    }
 }
