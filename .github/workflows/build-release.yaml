@@ -3,6 +3,16 @@ name: Build-Release
 on:
   workflow_dispatch:
     inputs:
+      publish-fiss:
+        description: "Publish Fiss to the Nuget"
+        required: false
+        type: boolean
+        default: true
+      publish-fiss-client:
+        description: "Publish Fiss.Client to the Nuget"
+        required: false
+        type: boolean
+        default: false        
       prerelease:
         description: "Is prerelease version"
         required: false
@@ -34,16 +44,33 @@ jobs:
       # pack nuget
       - run: dotnet build -c Release -p:Version=${{ inputs.tag }}
       - run: dotnet test -c Release --no-build
-      - run: dotnet pack -c Release --no-build -p:Version=${{ inputs.tag }} -o ./publish
+         
+  publish-fiss:
+    if: ${{ inputs.publish-fiss }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: dotnet pack -c Release --no-build -p:Version=${{ inputs.tag }} -o ./publish_fiss
       - uses: actions/upload-artifact@v3
         with:
           name: nuget
-          path: ./publish
-         
+          path: ./publish_fiss   
+          
+   publish-fiss-client:
+    if: ${{ inputs.publish-fiss }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: dotnet pack -c Release --no-build -p:Version=${{ inputs.tag }} -o ./publish_fiss_client
+      - uses: actions/upload-artifact@v3
+        with:
+          name: nuget
+          path: ./publish_fiss_client   
+          
   # release
   create-release:
     needs: [build-dotnet]
-    uses: Kataane/Fiss/.github/actions/create-release.yaml@main
+    uses: Kataane/Fiss/.github/workflows/create-release.yaml@main
     with:
       dry-run: ${{ inputs.dry-run }}
       commit-id: ${{ needs.update-packagejson.outputs.sha }}
