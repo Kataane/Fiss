@@ -4,7 +4,7 @@ namespace Fiss.Tests.Utilities;
 
 public class EnumUtilitiesTests
 {
-    public enum TestEnum
+    private enum TestEnum
     {
         [Description("Test Description 1")]
         Value1,

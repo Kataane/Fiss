@@ -1,14 +1,16 @@
-﻿using System.Net;
+﻿#pragma warning disable CS8625
+
+using System.Net;
 using Moq.Protected;
 
 namespace Fiss.Tests;
 
 public partial class PagedCursorTest
 {
-    public const string BaseUrl = "https://iss.moex.com/iss.json";
-    private readonly Mock<IHttpContentSerializer> httpContentSerializerMock = new(MockBehavior.Strict);
-    private readonly Mock<HttpMessageHandler> handlerMock = new(MockBehavior.Strict);
-    private const string HttpMessageHandlerSendAsyncMethodName = "SendAsync";
+    private const string baseUrl = "https://iss.moex.com/iss.json";
+    private readonly Mock<IHttpContentSerializer> httpContentSerializerMock = new();
+    private readonly Mock<HttpMessageHandler> handlerMock = new();
+    private const string httpMessageHandlerSendAsyncMethodName = "SendAsync";
 
     [Fact]
     public void Constructor_IndexMoreThanTotal_ThrowArgumentException()
@@ -18,9 +20,9 @@ public partial class PagedCursorTest
         // Act
 
         // Assert
-        var exception = Assert.Throws<ArgumentException>(() =>
-            new PagedCursor<string>(2600, 2500, PageSize.Hundred, BaseUrl, httpContentSerializerMock.Object));
-        Assert.Equal("The index value 2600 cannot be more than total value 2500.", exception.Message);
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new PagedCursor<string>(2600, 2500, PageSize.Hundred, baseUrl, httpContentSerializerMock.Object));
+        Assert.Equal("The index value 2600 cannot be more than total value 2500. (Parameter 'index')", exception.Message);
     }
 
     [Theory]
@@ -28,7 +30,7 @@ public partial class PagedCursorTest
     public void Constructor_UrlLengthMore512_ThrowArgumentException(int index, int total, PageSize pageSize)
     {
         // Arrange
-        var url = string.Join("", Enumerable.Repeat("n", 512));
+        var url = string.Join(string.Empty, Enumerable.Repeat("n", 512));
         var limitQuerySize = Constants.LimitQuerySize + ((int)pageSize).ToString().Length;
         var startQuerySize = Constants.StartQuerySize + total.ToString().Length;
         var finalUrlLength = url.Length + limitQuerySize + startQuerySize;
@@ -36,9 +38,9 @@ public partial class PagedCursorTest
         // Act
 
         // Assert
-        var exception = Assert.Throws<ArgumentException>(() =>
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() =>
             new PagedCursor<string>(index, total, pageSize, url, httpContentSerializerMock.Object));
-        Assert.Equal($"The size value {finalUrlLength} cannot be more than maxSizeForStackAlloc value 512.",
+        Assert.Equal($"The size value {finalUrlLength} cannot be more than maxSizeForStackAlloc value 512. (Parameter 'size')",
             exception.Message);
     }
 
@@ -50,13 +52,13 @@ public partial class PagedCursorTest
         // Act
 
         // Assert
-        var exception1 = Assert.Throws<ArgumentException>(() =>
-            new PagedCursor<string>(-1, 2500, PageSize.Hundred, BaseUrl, httpContentSerializerMock.Object));
-        var exception2 = Assert.Throws<ArgumentException>(() =>
-            new PagedCursor<string>(10, -1, PageSize.Hundred, BaseUrl, httpContentSerializerMock.Object));
+        var exception1 = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new PagedCursor<string>(-1, 2500, PageSize.Hundred, baseUrl, httpContentSerializerMock.Object));
+        var exception2 = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            new PagedCursor<string>(10, -1, PageSize.Hundred, baseUrl, httpContentSerializerMock.Object));
 
-        Assert.Equal("The index value cannot be less than 0.", exception1.Message);
-        Assert.Equal("The total value cannot be less than 0.", exception2.Message);
+        Assert.Equal("The index value cannot be less than 0. (Parameter 'index')", exception1.Message);
+        Assert.Equal("The total value cannot be less than 0. (Parameter 'total')", exception2.Message);
     }
 
     [Fact]
@@ -83,17 +85,17 @@ public partial class PagedCursorTest
     public void TryNext_UpdateStartQueryUseTryNext_ReturnsUpdatedStartQuery(int index, int total, PageSize pageSize)
     {
         // Arrange
-        var pageSize_i = (int)pageSize;
-        var expected = new List<string> { BaseUrl + $"?limit={pageSize_i}&start={index}" };
+        var pageSizeI = (int)pageSize;
+        var expected = new List<string> { baseUrl + $"?limit={pageSizeI}&start={index}" };
         var i = index;
-        while (total > i + pageSize_i)
+        while (total > i + pageSizeI)
         {
-            i += pageSize_i;
-            expected.Add(BaseUrl + $"?limit={pageSize_i}&start={i}");
+            i += pageSizeI;
+            expected.Add(baseUrl + $"?limit={pageSizeI}&start={i}");
         }
 
         // Act
-        var cursor = new PagedCursor<string>(index, total, pageSize, BaseUrl, httpContentSerializerMock.Object);
+        var cursor = new PagedCursor<string>(index, total, pageSize, baseUrl, httpContentSerializerMock.Object);
         var actual = new List<string>();
         do
         {
@@ -117,7 +119,7 @@ public partial class PagedCursorTest
     {
         // Arrange
         var uriFromIssRequest =
-            new Uri(QueryHelpers.AddQueryString(BaseUrl,
+            new Uri(QueryHelpers.AddQueryString(baseUrl,
                 parameters.queries.ToDictionary(kvp => kvp.Key, kvp => kvp.Value))).AbsoluteUri;
 
         // Act
@@ -137,7 +139,7 @@ public partial class PagedCursorTest
     public void TryToPage_WhenTotalIsZero_ReturnsFalse()
     {
         // Arrange
-        var cursor = new PagedCursor<object>(0, 0, PageSize.Ten, BaseUrl, httpContentSerializerMock.Object);
+        var cursor = new PagedCursor<object>(0, 0, PageSize.Ten, baseUrl, httpContentSerializerMock.Object);
 
         // Act
         var result = cursor.TryToPage(1);
@@ -150,7 +152,7 @@ public partial class PagedCursorTest
     public void TryToPage_WhenPageIsNegative_ReturnsFalse()
     {
         // Arrange
-        var cursor = new PagedCursor<object>(0, 10, PageSize.Ten, BaseUrl, httpContentSerializerMock.Object);
+        var cursor = new PagedCursor<object>(0, 10, PageSize.Ten, baseUrl, httpContentSerializerMock.Object);
 
         // Act
         var result = cursor.TryToPage(-1);
@@ -163,7 +165,7 @@ public partial class PagedCursorTest
     public void TryToPage_WhenPageIsGreaterThanCountPages_ReturnsFalse()
     {
         // Arrange
-        var cursor = new PagedCursor<object>(0, 10, PageSize.Ten, BaseUrl, httpContentSerializerMock.Object);
+        var cursor = new PagedCursor<object>(0, 10, PageSize.Ten, baseUrl, httpContentSerializerMock.Object);
 
         // Act
         var result = cursor.TryToPage(2);
@@ -176,7 +178,7 @@ public partial class PagedCursorTest
     public void TryToPage_WhenPageIsValid_ReturnsTrue()
     {
         // Arrange
-        var cursor = new PagedCursor<object>(0, 20, PageSize.Ten, BaseUrl, httpContentSerializerMock.Object);
+        var cursor = new PagedCursor<object>(0, 20, PageSize.Ten, baseUrl, httpContentSerializerMock.Object);
 
         // Act
         var result = cursor.TryToPage(1);
@@ -200,7 +202,7 @@ public partial class PagedCursorTest
             .ReturnsAsync(() => expectedEntities[call]);
 
         var httpClient = new HttpClient();
-        var cursor = new PagedCursor<string>(0, expectedEntities.Length, PageSize.One, BaseUrl, httpContentSerializerMock.Object, httpClient);
+        var cursor = new PagedCursor<string>(0, expectedEntities.Length, PageSize.One, baseUrl, httpContentSerializerMock.Object, httpClient);
 
         // Act
         var actual = new List<string>();
@@ -231,7 +233,7 @@ public partial class PagedCursorTest
             .ReturnsAsync(() => expectedEntities[call]);
 
         var httpClient = new HttpClient();
-        var cursor = new PagedCursor<string>(0, 0, PageSize.One, BaseUrl, httpContentSerializerMock.Object, httpClient);
+        var cursor = new PagedCursor<string>(0, 0, PageSize.One, baseUrl, httpContentSerializerMock.Object, httpClient);
 
         // Act
         var actual = new List<string>();
@@ -255,14 +257,14 @@ public partial class PagedCursorTest
     {
         // Arrange
         handlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>(HttpMessageHandlerSendAsyncMethodName, ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Setup<Task<HttpResponseMessage>>(httpMessageHandlerSendAsyncMethodName, ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK));
 
         httpContentSerializerMock.Setup(s => s.Deserialize<string>(It.IsAny<StringContent>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => null);
 
         var httpClient = new HttpClient(handlerMock.Object);
-        var cursor = new PagedCursor<string>(0, 1, PageSize.One, BaseUrl, httpContentSerializerMock.Object, httpClient);
+        var cursor = new PagedCursor<string>(0, 1, PageSize.One, baseUrl, httpContentSerializerMock.Object, httpClient);
 
         // Act
 
@@ -285,13 +287,13 @@ public partial class PagedCursorTest
         const string expectedEntity = "entity1";
 
         handlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>(HttpMessageHandlerSendAsyncMethodName, ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Setup<Task<HttpResponseMessage>>(httpMessageHandlerSendAsyncMethodName, ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK));
 
         httpContentSerializerMock.Setup(s => s.Deserialize<string>(It.IsAny<HttpContent>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => expectedEntity);
 
         var httpClient = new HttpClient(handlerMock.Object);
-        var cursor = new PagedCursor<string>(0, 1, PageSize.One, BaseUrl, httpContentSerializerMock.Object, httpClient);
+        var cursor = new PagedCursor<string>(0, 1, PageSize.One, baseUrl, httpContentSerializerMock.Object, httpClient);
 
         // Act
         var actual = await cursor.GetPageResult();
@@ -300,7 +302,7 @@ public partial class PagedCursorTest
         Assert.Equal(expectedEntity, actual);
 
         handlerMock.Protected().Verify(
-            HttpMessageHandlerSendAsyncMethodName,
+            httpMessageHandlerSendAsyncMethodName,
             Times.Once(),
             ItExpr.IsAny<HttpRequestMessage>(),
             ItExpr.IsAny<CancellationToken>()
@@ -317,11 +319,11 @@ public partial class PagedCursorTest
     {
         // Arrange
         handlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>(HttpMessageHandlerSendAsyncMethodName, ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Setup<Task<HttpResponseMessage>>(httpMessageHandlerSendAsyncMethodName, ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.NotFound));
 
         var httpClient = new HttpClient(handlerMock.Object);
-        var cursor = new PagedCursor<string>(0, 1, PageSize.One, BaseUrl, httpContentSerializerMock.Object, httpClient);
+        var cursor = new PagedCursor<string>(0, 1, PageSize.One, baseUrl, httpContentSerializerMock.Object, httpClient);
 
         // Act
 
@@ -329,7 +331,7 @@ public partial class PagedCursorTest
         await Assert.ThrowsAsync<HttpRequestException>(async () => await cursor.GetPageResult());
 
         handlerMock.Protected().Verify(
-            HttpMessageHandlerSendAsyncMethodName,
+            httpMessageHandlerSendAsyncMethodName,
             Times.Once(),
             ItExpr.IsAny<HttpRequestMessage>(),
             ItExpr.IsAny<CancellationToken>()
@@ -346,11 +348,11 @@ public partial class PagedCursorTest
     {
         // Arrange
         handlerMock.Protected()
-            .Setup<Task<HttpResponseMessage>>(HttpMessageHandlerSendAsyncMethodName, ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+            .Setup<Task<HttpResponseMessage>>(httpMessageHandlerSendAsyncMethodName, ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK));
 
         var httpClient = new HttpClient(handlerMock.Object);
-        var cursor = new PagedCursor<string>(0, 0, PageSize.One, BaseUrl, httpContentSerializerMock.Object, httpClient);
+        var cursor = new PagedCursor<string>(0, 0, PageSize.One, baseUrl, httpContentSerializerMock.Object, httpClient);
 
         // Act
         var actual = await cursor.GetPageResult();
@@ -359,7 +361,7 @@ public partial class PagedCursorTest
         Assert.Equal(default, actual);
 
         handlerMock.Protected().Verify(
-            HttpMessageHandlerSendAsyncMethodName,
+            httpMessageHandlerSendAsyncMethodName,
             Times.Never(),
             ItExpr.IsAny<HttpRequestMessage>(),
             ItExpr.IsAny<CancellationToken>()

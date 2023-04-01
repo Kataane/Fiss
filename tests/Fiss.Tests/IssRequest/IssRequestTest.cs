@@ -1,4 +1,7 @@
-﻿namespace Fiss.Tests;
+﻿#pragma warning disable CS8625
+#pragma warning disable CS8604
+
+namespace Fiss.Tests;
 
 public partial class IssRequestTest
 {
