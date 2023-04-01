@@ -80,7 +80,7 @@ public static partial class IssRequestExtension
     /// </param>
     /// <returns>A <see cref="PagedCursor{T}" /> of <see cref="Page" /> object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static async Task<PagedCursor<Page>> ToCursor(
+    public static async Task<PagedCursor<Page>> ToCursorAsync(
         this IIssRequest request,
         string? cursorTitle = null,
         int? index = null,
@@ -98,7 +98,7 @@ public static partial class IssRequestExtension
             ? IssSettings.PageExtendedJsonSerializerInstance
             : IssSettings.PageCompactJsonSerializerInstance;
 
-        return await request.ToCursor<Page>(serializer, cursorTitle, index, total, pageSize, client, cancellationToken)
+        return await request.ToCursorAsync<Page>(serializer, cursorTitle, index, total, pageSize, client, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -132,7 +132,7 @@ public static partial class IssRequestExtension
     /// </param>
     /// <returns>A <see cref="PagedCursor{T}" /> object.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static async Task<PagedCursor<TResult>> ToCursor<TResult>(
+    public static async Task<PagedCursor<TResult>> ToCursorAsync<TResult>(
         this IIssRequest request,
         IHttpContentSerializer serializer,
         string? cursorTitle = null,
