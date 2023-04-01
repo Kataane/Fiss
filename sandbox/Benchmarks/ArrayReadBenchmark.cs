@@ -10,7 +10,7 @@ namespace Benchmarks;
 public class ArrayReadBenchmark
 {
     [Params(32, 64, 128, 256, 512, 1024)]
-    public int N;
+    private int N;
 
     private int[] array = null!;
 
