@@ -1,0 +1,78 @@
+# Get from https://github.com/Cysharp
+
+name: Create-Release
+
+on:
+  workflow_call:
+    inputs:
+      prerelease:
+        description: "Is prerelease version"
+        required: false
+        type: boolean
+        default: false
+      commit-id:
+        description: "commit id to craete release, tag"
+        required: true
+        type: string
+      tag:
+        description: "git tag you want create. (sample 1.0.0)"
+        required: true
+        type: string
+      push-tag:
+        description: "true = push tag. false = no push tag."
+        required: false
+        type: boolean
+        default: false
+      # nuget
+      nuget-push:
+        description: "true = upload nuget package. false = not upload"
+        required: false
+        type: boolean
+        default: false
+      nuget-path:
+        description: "nuget path to upload."
+        required: false
+        type: string
+        default: "./nuget/*.nupkg"
+
+jobs:
+  create-relase:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: setup-dotnet@main
+        if: ${{ inputs.nuget-push }}
+
+      # Create Tag
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.commit-id }}
+        if: ${{ inputs.push-tag }}
+
+      - name: Create Tag
+        run: |
+          git tag ${{ inputs.tag }}
+          git push origin ${{ inputs.tag }}
+        if: ${{ inputs.push-tag }}
+
+      # Download(All) Artifacts to current directory
+      - uses: actions/download-artifact@v3
+      - name: Show download aritifacts
+        run: ls -lR
+
+      # Create Releases
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ inputs.tag }}
+          release_name: Ver.${{ inputs.tag }}
+          commitish: ${{ inputs.commit-id }}
+          draft: true
+          prerelease: ${{ inputs.prerelease }}
+        if: ${{ !inputs.dry-run}}
+
+      # Upload to NuGet
+      - run: dotnet nuget push "${{ inputs.nuget-path }}" --skip-duplicate -s https://www.nuget.org/api/v3/package -k "${{ secrets.NUGET_KEY }}"
+        if: ${{ !inputs.dry-run && inputs.nuget-push }}
