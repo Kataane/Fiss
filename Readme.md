@@ -66,7 +66,37 @@ var cursor = await request.ToCursor();
 await foreach (var page in cursor)
 ```
 
-Вуаля! Теперь можно запрашивать любые, даже не задокументированые, данные из ISS MOEX.
+## 🛂 Passport MOEX
+
+Для аутентификации на Московской Бирже необходимо следующее.
+
+Установить пакет Fiss.Client
+```
+Install-Package Fiss.Client
+```
+
+Или через .NET Core command line interface:
+```
+dotnet add package Fiss.Client
+```
+
+Вызвать для `IServiceCollection` расширение `AddMoexPassportClient`
+```csharp
+collection.AddMoexPassportClient("NameForMoexPassportClient", IConfigurationSection);
+```
+
+где `NameForMoexPassportClient` [уникальное](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory#named-clients) имя для клиента. `IConfigurationSection`  — [конфигурация](https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration) где хранится данные для аутентификации на Московской Бирже.
+
+Далее необходимо получить именованный клиент: 
+```csharp
+var client = IHttpClientFactory.CreateClient("NameForMoexPassportClient");
+```
+
+Далее с помощью этого клиента можно запрашивать данные, которые требуют авторизацию. 
+
+`MoexPassportClient` хранить в себе всегда актуальный токен для авторизации, даже если токен протухнет. MOEX заботливо выдаст новый токен авторизации и клиент снова станет валидным.
+
+Вуаля! Теперь можно запрашивать любые, даже не задокументированные или требующие авторизацию, данные из MOEX.
 
 ## 📝 License 
 [The MIT License (MIT)](https://mit-license.org/)

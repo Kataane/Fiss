@@ -63,7 +63,36 @@ And then:
 await foreach (var page in cursor)
 ```
 
-Voila! Now you can request any data from MOEX ISS, even undocumented ones.
+## 🛂 Passport MOEX
+To authenticate on the Moscow Exchange, the following is required.
+
+Install the Fiss.Client package:
+```
+Install-Package Fiss.Client
+```
+
+Or via the .NET Core command line interface:
+```
+dotnet add package Fiss.Client
+```
+
+Call the `AddMoexPassportClient` extension method for `IServiceCollection`:
+```csharp
+collection.AddMoexPassportClient("NameForMoexPassportClient", IConfigurationSection);
+```
+
+where `NameForMoexPassportClient` is a [unique](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory#named-clients) name for the client. `IConfigurationSection` is a [configuration](https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration) that stores the data for authentication on the MOEX.
+
+Next, you need to get the named client:
+```csharp
+var client = IHttpClientFactory.CreateClient("NameForMoexPassportClient");
+```
+
+Then, using this client, you can request data that requires authorization.
+
+The `MoexPassportClient` always keeps an up-to-date token for authorization, even if the token expires. MOEX will kindly issue a new token, and the client will become valid again.
+
+Voila! Now you can request any data from MOEX, even undocumented or requiring authorization.
 
 ## 📝 License 
 [The MIT License (MIT)](https://mit-license.org/)
