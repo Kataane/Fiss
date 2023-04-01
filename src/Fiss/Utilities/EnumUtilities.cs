@@ -4,13 +4,13 @@ using System.Reflection;
 namespace Fiss;
 
 /// <summary>
-/// Provides description for <typeparamref name="T"/> enum.
+///     Provides description for <typeparamref name="T" /> enum.
 /// </summary>
 /// <typeparam name="T">The type of the enum.</typeparam>
 internal static class EnumUtilities<T> where T : Enum
 {
     /// <summary>
-    /// Gets the description for the specified enum value, or the enum value's name if no description is found.
+    ///     Gets the description for the specified enum value, or the enum value's name if no description is found.
     /// </summary>
     /// <param name="value">The enum value to get the description for.</param>
     /// <returns>The description for the specified enum value, or the enum value's name if no description is found.</returns>

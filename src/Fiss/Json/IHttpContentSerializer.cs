@@ -6,10 +6,10 @@
 public interface IHttpContentSerializer
 {
     /// <summary>
-    ///     Converts a JSON response from the HTTP response into a Page object.
+    ///     Converts a JSON response from the HTTP response into a object.
     /// </summary>
     /// <param name="content">HttpContent object to deserialize.</param>
     /// <param name="cancellationToken">CancellationToken to abort the deserialization.</param>
-    /// <returns>A Page object representing the JSON response.</returns>
+    /// <returns>A object representing the JSON response.</returns>
     public Task<T?> Deserialize<T>(HttpContent content, CancellationToken cancellationToken = default);
 }

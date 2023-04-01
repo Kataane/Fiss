@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace Fiss.Json;
 
+/// <summary>
+///     Converts a JSON response from an ISS request into a dictionary of cursors.
+/// </summary>
 internal class ExtendedCursorConverter : JsonConverter<Dictionary<string, Cursor>>
 {
     private static ReadOnlySpan<char> indexSpan => "INDEX";
@@ -14,6 +17,7 @@ internal class ExtendedCursorConverter : JsonConverter<Dictionary<string, Cursor
     /// </summary>
     public static readonly ExtendedCursorConverter Instance = new();
 
+    /// <inheritdoc />
     public override Dictionary<string, Cursor> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var cursors = new Dictionary<string, Cursor>();
@@ -21,7 +25,7 @@ internal class ExtendedCursorConverter : JsonConverter<Dictionary<string, Cursor
         var document = JsonDocument.ParseValue(ref reader);
         var root = document.RootElement;
 
-        foreach (var property in GetCursorObjects(root))
+        foreach (var property in GetCursorProperty(root))
         {
             var header = property.Name;
             Cursor? cursor = null;
@@ -76,13 +80,14 @@ internal class ExtendedCursorConverter : JsonConverter<Dictionary<string, Cursor
         };
     }
 
-    private static IEnumerable<JsonProperty> GetCursorObjects(JsonElement root)
+    private static IEnumerable<JsonProperty> GetCursorProperty(JsonElement root)
     {
         return root.EnumerateArray().SelectMany(static jsonElement =>
             jsonElement.EnumerateObject().Where(static property =>
                 property.Name.Contains(Constants.Cursor, StringComparison.OrdinalIgnoreCase)));
     }
 
+    /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, Dictionary<string, Cursor> value, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
