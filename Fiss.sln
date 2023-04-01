@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiss.Tests", "tests\Fiss.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "sandbox\Benchmarks\Benchmarks.csproj", "{C9A5A961-2BD5-4D1B-BEFE-AAEECF1BFF44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiss.Generator", "sandbox\Fiss.Generator\Fiss.Generator.csproj", "{267892AC-BDBB-485E-9F5D-7C3844C06105}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fiss.Client", "src\Fiss.Client\Fiss.Client.csproj", "{EE7F204A-6AB9-4998-8F00-25B104E74A21}"
 EndProject
 Global
