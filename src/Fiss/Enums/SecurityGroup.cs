@@ -3,12 +3,12 @@
 /// <summary>
 ///     Securities groups
 /// </summary>
-public enum SecurityGroup
+public enum SecurityGroup : byte
 {
     /// <summary>
-    ///     Indices
+    ///     Bonds
     /// </summary>
-    StockIndex = 12,
+    StockBonds = 3,
 
     /// <summary>
     ///     Stocks
@@ -16,9 +16,14 @@ public enum SecurityGroup
     StockShares = 4,
 
     /// <summary>
-    ///     Bonds
+    ///     Investment shares
     /// </summary>
-    StockBonds = 3,
+    StockPpif = 5,
+
+    /// <summary>
+    ///     Eurobonds
+    /// </summary>
+    StockEurobond = 6,
 
     /// <summary>
     ///     Currency
@@ -31,9 +36,9 @@ public enum SecurityGroup
     FuturesForts = 10,
 
     /// <summary>
-    ///     Options
+    ///     Indices
     /// </summary>
-    FuturesOptions = 26,
+    StockIndex = 12,
 
     /// <summary>
     ///     Depositary receipts
@@ -41,29 +46,9 @@ public enum SecurityGroup
     StockDr = 18,
 
     /// <summary>
-    ///     Foreign issuers shares
-    /// </summary>
-    StockForeignShares = 33,
-
-    /// <summary>
-    ///     Eurobonds
-    /// </summary>
-    StockEurobond = 6,
-
-    /// <summary>
-    ///     Investment shares
-    /// </summary>
-    StockPpif = 5,
-
-    /// <summary>
     ///     Exchange traded funds
     /// </summary>
     StockEtf = 20,
-
-    /// <summary>
-    ///     Precious metal
-    /// </summary>
-    CurrencyMetal = 24,
 
     /// <summary>
     ///     Qualified investors
@@ -71,19 +56,24 @@ public enum SecurityGroup
     StockQnv = 21,
 
     /// <summary>
+    ///     Mortgage note
+    /// </summary>
+    StockMortgage = 22,
+
+    /// <summary>
+    ///     Precious metal
+    /// </summary>
+    CurrencyMetal = 24,
+
+    /// <summary>
+    ///     Options
+    /// </summary>
+    FuturesOptions = 26,
+
+    /// <summary>
     ///     General collateral certificates
     /// </summary>
     StockGcc = 27,
-
-    /// <summary>
-    ///     Deposit CCP
-    /// </summary>
-    StockDeposit = 29,
-
-    /// <summary>
-    ///     Bi-currency basket
-    /// </summary>
-    CurrencyBasket = 17,
 
     /// <summary>
     ///     Currency futures
@@ -91,17 +81,17 @@ public enum SecurityGroup
     CurrencyFutures = 28,
 
     /// <summary>
+    ///     Deposit CCP
+    /// </summary>
+    StockDeposit = 29,
+
+    /// <summary>
     ///     Currency fixings
     /// </summary>
     CurrencyIndices = 31,
 
     /// <summary>
-    ///     Commodity assets
+    ///     Foreign issuers shares
     /// </summary>
-    AgroCommodities = 40,
-
-    /// <summary>
-    ///     Mortgage note
-    /// </summary>
-    StockMortgage = 22
+    StockForeignShares = 33,
 }

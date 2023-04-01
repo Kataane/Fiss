@@ -1,59 +1,59 @@
 ﻿namespace Fiss;
 
 /// <summary>
-///     Securities types
+///     Securities groups
 /// </summary>
-public enum SecurityType
+public enum SecurityType : ushort
 {
     /// <summary>
     ///     Preferred stock
     /// </summary>
-    PreferredShare,
+    PreferredShare = 1,
 
     /// <summary>
     ///     Bond
     /// </summary>
-    CorporateBond,
+    CorporateBond = 2,
 
     /// <summary>
     ///     Common stock
     /// </summary>
-    CommonShare,
+    CommonShare = 3,
 
     /// <summary>
     ///     Central Bank bond
     /// </summary>
-    CbBond,
+    CbBond = 4,
 
     /// <summary>
     ///     Currency
     /// </summary>
-    Currency,
+    Currency = 5,
 
     /// <summary>
     ///     Futures
     /// </summary>
-    Futures,
+    Futures = 6,
 
     /// <summary>
     ///     Public Investment Unit share
     /// </summary>
-    PublicPpif,
+    PublicPpif = 7,
 
     /// <summary>
     ///     Interval Investment Unit share
     /// </summary>
-    IntervalPpif,
+    IntervalPpif = 8,
 
     /// <summary>
     ///     Private Investment Unit share
     /// </summary>
-    PrivatePpif,
+    PrivatePpif = 9,
 
     /// <summary>
     ///     Eurobond
     /// </summary>
-    StateBond,
+    StateBond = 10,
 
     /// <summary>
     ///     Subfederal bond
@@ -63,67 +63,47 @@ public enum SecurityType
     /// <summary>
     ///     IFI bond
     /// </summary>
-    IfiBond,
+    IfiBond = 42,
 
     /// <summary>
     ///     Exchange bond
     /// </summary>
-    ExchangeBond,
+    ExchangeBond = 43,
 
     /// <summary>
     ///     Stock index
     /// </summary>
-    StockIndex,
+    StockIndex = 44,
 
     /// <summary>
     ///     Municipal bond
     /// </summary>
-    MunicipalBond,
-
-    /// <summary>
-    ///     Government bond index
-    /// </summary>
-    StateIndex,
-
-    /// <summary>
-    ///     Commodity futures (NAMEX)
-    /// </summary>
-    CommodityFutures = 48,
-
-    /// <summary>
-    ///     Commodity intervention
-    /// </summary>
-    CommodityIntervention,
-
-    /// <summary>
-    ///     Bi-currency basket
-    /// </summary>
-    CurrencyBasket,
+    MunicipalBond = 45,
 
     /// <summary>
     ///     Depositary Receipt
     /// </summary>
-    DepositaryReceipt,
+    DepositaryReceipt = 51,
 
     /// <summary>
     ///     Option
     /// </summary>
-    Option,
+    Option = 52,
 
     /// <summary>
     ///     RTS index
     /// </summary>
-    RtsIndex,
+    RtsIndex = 53,
 
     /// <summary>
     ///     Government bonds
     /// </summary>
-    OfzBond,
+    OfzBond = 54,
 
     /// <summary>
     ///     ETF
     /// </summary>
-    EtfPpif,
+    EtfPpif = 55,
 
     /// <summary>
     ///     Mortgage note
@@ -133,17 +113,17 @@ public enum SecurityType
     /// <summary>
     ///     Gold metal
     /// </summary>
-    GoldMetal,
+    GoldMetal = 58,
 
     /// <summary>
     ///     Silver metal
     /// </summary>
-    SilverMetal,
+    SilverMetal = 59,
 
     /// <summary>
     ///     Eurobonds
     /// </summary>
-    EuroBond,
+    EuroBond = 60,
 
     /// <summary>
     ///     Currency futures
@@ -153,7 +133,7 @@ public enum SecurityType
     /// <summary>
     ///     Deposit CCP
     /// </summary>
-    StockDeposit,
+    StockDeposit = 63,
 
     /// <summary>
     ///     Currency fixing
@@ -163,72 +143,57 @@ public enum SecurityType
     /// <summary>
     ///     Exchange Investment Unit share
     /// </summary>
-    ExchangePpif,
+    ExchangePpif = 74,
 
     /// <summary>
     ///     Currency fixing
     /// </summary>
-    CurrencyIndex,
+    CurrencyIndex = 75,
 
     /// <summary>
     ///     Weighted Average Rate
     /// </summary>
-    CurrencyWap,
-
-    /// <summary>
-    ///     Sugar
-    /// </summary>
-    AgroSugar,
+    CurrencyWap = 76,
 
     /// <summary>
     ///     Non-exchange commercial bond
     /// </summary>
-    NonExchangeBond,
-
-    /// <summary>
-    ///     Credit
-    /// </summary>
-    StockCredit = 81,
-
-    /// <summary>
-    ///     REPO Basket
-    /// </summary>
-    StockRepoBasket = 83,
+    NonExchangeBond = 78,
 
     /// <summary>
     ///     Equities index
     /// </summary>
-    StockIndexEq,
+    StockIndexEq = 84,
 
     /// <summary>
     ///     Bonds index
     /// </summary>
-    StockIndexFi,
+    StockIndexFi = 85,
 
     /// <summary>
     ///     Composite index
     /// </summary>
-    StockIndexMx,
+    StockIndexMx = 86,
 
     /// <summary>
     ///     Equities iNAV
     /// </summary>
-    StockIndexIe,
+    StockIndexIe = 87,
 
     /// <summary>
     ///     Bonds iNAV
     /// </summary>
-    StockIndexIf,
+    StockIndexIf = 88,
 
     /// <summary>
     ///     Commodity Indicator
     /// </summary>
-    StockIndexCi,
+    StockIndexCi = 89,
 
     /// <summary>
     ///     Mixed iNAV
     /// </summary>
-    StockIndexIm,
+    StockIndexIm = 90,
 
     /// <summary>
     ///     NAMEX Index
@@ -238,7 +203,7 @@ public enum SecurityType
     /// <summary>
     ///     Option on shares
     /// </summary>
-    OptionOnShares,
+    OptionOnShares = 1031,
 
     /// <summary>
     ///     RUSFAR
@@ -248,5 +213,5 @@ public enum SecurityType
     /// <summary>
     ///     Price fixing
     /// </summary>
-    StockIndexPf = 1155
+    StockIndexPf = 1155,
 }

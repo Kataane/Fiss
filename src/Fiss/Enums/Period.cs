@@ -1,6 +1,6 @@
 ﻿namespace Fiss;
 
-public enum Period
+public enum Period : byte
 {
     Yearly,
     Monthly,

@@ -1,15 +1,15 @@
 ﻿namespace Fiss;
 
 /// <summary>
-///     Agro market of trading system
+///     Agro market of trading system. Belongs to the following trading system <see cref="Engine.Agro" />.
 /// </summary>
-public enum AgroMarket
+/// <remarks>
+///     Do not convert to number. Only as the string path will work.
+/// </remarks>
+public enum AgroMarket : byte
 {
     /// <summary>
     ///     Sugar trading.
-    ///     <para>
-    ///         Belongs to the following trading system <see cref="Engine.Agro" />.
-    ///     </para>
     /// </summary>
     Sugar = 51
 }

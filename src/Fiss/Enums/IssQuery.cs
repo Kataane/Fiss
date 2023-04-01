@@ -3,892 +3,913 @@
 namespace Fiss;
 
 /// <summary>
-///     Presents all requests to ISS MOEX.
+///     Market trading modes
 /// </summary>
-public enum IssQuery
+public enum IssQuery : byte
 {
     /// <summary>
-    ///     /statistics/engines/stock/markets/bonds/bondization/[security]
+    ///     Moscow exchange securities list
     /// </summary>
-    [Description("statistics/engines/stock/markets/bonds/bondization/{0}")]
-    Bondization = -1,
+    [Description("securities")]
+    Securities,
 
     /// <summary>
-    ///     /securities
+    ///     Get security specifications. Example: https://iss.moex.com/iss/securities/IMOEX.xml?lang=en
     /// </summary>
-    [Description("securities")] ListOfSecurities = 5,
+    [Description("securities/{0}")]
+    SS,
 
     /// <summary>
-    ///     /securities/[security]
-    /// </summary>
-    [Description("securities/{0}")] SecuritySpecification = 13,
-
-    /// <summary>
-    ///     /securities/[security]/indices
+    ///     securities/{0}/indices
     /// </summary>
     [Description("securities/{0}/indices")]
-    IndexesIncludeSecurities = 160,
+    SSI,
 
     /// <summary>
-    ///     /turnovers
-    /// </summary>
-    [Description("turnovers")] ConsolidatedTurnovers = 24,
-
-    /// <summary>
-    ///     /engines
-    /// </summary>
-    [Description("engines")] ListOfEngines = 40,
-
-    /// <summary>
-    ///     securities/[security]/aggregates
+    ///     securities/{0}/aggregates
     /// </summary>
     [Description("securities/{0}/aggregates")]
-    Ssa = 214,
+    SSA,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/secstats
+    ///     engines/{0}/markets/{1}/secstats
     /// </summary>
     [Description("engines/{0}/markets/{1}/secstats")]
-    Eemms = 823,
+    EEMMS,
 
     /// <summary>
-    ///     turnovers/columns
+    ///     Get current turnover on all the markets.Example: https://iss.moex.com/iss/turnovers.xml?lang=en
     /// </summary>
-    [Description("turnovers/columns")] Tc = 100,
+    [Description("turnovers")]
+    Turnovers,
 
     /// <summary>
-    ///     engines/[engine]/turnovers
+    ///     Get the description of columns in requests for market/engine turnover.Example: https://iss.moex.com/iss/engines/stock/turnovers/columns.xml?lang=en
     /// </summary>
-    [Description("engines/{0}/turnovers")] Eet = 95,
+    [Description("turnovers/columns")]
+    TC,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/turnovers
+    ///     Get current turnover for a trading engine
+    /// </summary>
+    [Description("engines/{0}/turnovers")]
+    EET,
+
+    /// <summary>
+    ///     Get current turnover for a market
     /// </summary>
     [Description("engines/{0}/markets/{1}/turnovers")]
-    Eemmt = 96,
+    EEMMT,
 
     /// <summary>
-    ///     engines/[engine]/markets/zcyc
+    ///     Get data for the zero-coupon yield curve.(Calculations stopped at 2018-01-03)
     /// </summary>
     [Description("engines/{0}/markets/zcyc")]
-    Eemz = 89,
+    EEMZ,
 
     /// <summary>
-    ///     engines/[engine]/zcyc
+    ///     engines/{0}/zcyc
     /// </summary>
-    [Description("engines/{0}/zcyc")] Eez = 634,
+    [Description("engines/{0}/zcyc")]
+    EEZ,
 
     /// <summary>
-    ///     index
+    ///     Get initial ISS reference.Example: https://iss.moex.com/iss/index.xml?lang=en
     /// </summary>
-    [Description("index")] Index = 28,
+    [Description("index")]
+    Index,
 
     /// <summary>
     ///     history/otc/providers/nsd/markets
     /// </summary>
     [Description("history/otc/providers/nsd/markets")]
-    Hopnm = 833,
+    HOPNM,
 
     /// <summary>
-    ///     history/otc/providers/nsd/markets/[market]/daily
+    ///     history/otc/providers/nsd/markets/{0}/daily
     /// </summary>
     [Description("history/otc/providers/nsd/markets/{0}/daily")]
-    Hopnmmd = 835,
+    HOPNMMD,
 
     /// <summary>
-    ///     history/otc/providers/nsd/markets/[market]/monthly
+    ///     history/otc/providers/nsd/markets/{0}/monthly
     /// </summary>
     [Description("history/otc/providers/nsd/markets/{0}/monthly")]
-    Hopnmmm = 837,
+    HOPNMMM,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/.*?listing/columns
+    ///     Get available trading systems. Example: https://iss.moex.com/iss/engines.xml?lang=en
     /// </summary>
-    [Description("history/engines/{0}/markets/{1}/.*?listing/columns")]
-    Heemmlc = 117,
+    [Description("engines")]
+    Engines,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/listing
+    ///     Get the description of columns for listing requests
+    /// </summary>
+    [Description("history/engines/{0}/markets/{1}/listing/columns")]
+    HEEMMLC,
+
+    /// <summary>
+    ///     Get information on when securities were traded on which boards
     /// </summary>
     [Description("history/engines/{0}/markets/{1}/listing")]
-    Heemml = 118,
+    HEEMML,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boards/[board]/listing
+    ///     Get security listing information for a given board
     /// </summary>
     [Description("history/engines/{0}/markets/{1}/boards/{2}/listing")]
-    Heemmbblisting = 119,
+    HEEMMBBL,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/listing
+    ///     Get security listing information for a given boardgroup
     /// </summary>
     [Description("history/engines/{0}/markets/{1}/boardgroups/{2}/listing")]
-    Heemmboardgroupsblisting = 120,
+    HistoryEEMMBBL,
 
     /// <summary>
-    ///     engines/[engine]
+    ///     Get description and availability time of a trading system.Example: https://iss.moex.com/iss/engines/stock.xml
     /// </summary>
-    [Description("engines/{0}")] Ee = 41,
+    [Description("engines/{0}")]
+    EE,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/.*?orderbook/columns
+    ///     Get the description of columns in requests for market orderbooks.Example: https://iss.moex.com/iss/engines/stock/markets/shares/boardgroups/6/orderbook/columns.xml?lang=en
     /// </summary>
-    [Description("engines/{0}/markets/{1}/.*?orderbook/columns")]
-    Eemmoc = 98,
+    [Description("engines/{0}/markets/{1}/orderbook/columns")]
+    EEMMOC,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/sessions
+    ///     Available sessions list in history.For stock market only.
     /// </summary>
     [Description("history/engines/{0}/markets/{1}/sessions")]
-    Heemms = 811,
+    HEEMMS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/sessions/[session]/securities
+    ///     Get trade results for all the securities on the specified market on the specified date.
     /// </summary>
     [Description("history/engines/{0}/markets/{1}/sessions/{2}/securities")]
-    Heemmsss = 813,
+    HEEMMSSS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/sessions/[session]/securities/[security]
+    ///     Get trade results for one security for the specified date range.
     /// </summary>
     [Description("history/engines/{0}/markets/{1}/sessions/{2}/securities/{3}")]
-    Heemmssss = 817,
+    HEEMMSSSS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/session/[session]/boardgroups/[boardgroup]/securities
+    ///     Get trade results for all the securities on the specified board group for the specified date.
     /// </summary>
     [Description("history/engines/{0}/markets/{1}/session/{2}/boardgroups/{3}/securities")]
-    Heemmssbbs = 825,
+    HEEMMSSBBS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/sessions/[session]/boardgroups/[boardgroup]/securities/[security]
+    ///     Get trade results for the specified security on the specified board group for the specified date.
     /// </summary>
-    [Description(
-        "history/engines/{0}/markets/{1}/sessions/{2}/boardgroups/{3}/securities/{4}")]
-    Heemmssbbss = 819,
+    [Description("history/engines/{0}/markets/{1}/sessions/{2}/boardgroups/{3}/securities/{4}")]
+    HEEMMSSBBSS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/sessions/[session]/boards/[board]/securities
+    ///     Get trade results for all the securities on the specified board for the specified date.
     /// </summary>
     [Description("history/engines/{0}/markets/{1}/sessions/{2}/boards/{3}/securities")]
-    Heemmssbbsecurities = 821,
+    HistoryEEMMSSBBS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/sessions/[session]/boards/[board]/securities/[security]
+    ///     Get trade results for the specified security on the specified board for the specified date interval.
     /// </summary>
     [Description("history/engines/{0}/markets/{1}/sessions/{2}/boards/{3}/securities/{4}")]
-    Heemmssbbssecurity = 815,
+    HistoryEEMMSSBBSS,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/.*?securities/columns
+    ///     Get the description of columns in requests for securities.Example: https://iss.moex.com/iss/engines/stock/markets/shares/securities/columns.xml?lang=en
     /// </summary>
-    [Description("engines/{0}/markets/{1}/.*?securities/columns")]
-    Eemmsc = 99,
+    [Description("engines/{0}/markets/{1}/securities/columns")]
+    EEMMSC,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/.*?securities/columns
+    ///     Get the description of columns in requests for security historical data.
     /// </summary>
-    [Description("history/engines/{0}/markets/{1}/.*?securities/columns")]
-    Heemmsc = 101,
+    [Description("history/engines/{0}/markets/{1}/{2}/columns")]
+    HEEMMSC,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/.*?[securities]/columns
+    ///     Get the list of markets for the trading system.Example: https://iss.moex.com/iss/engines/stock/markets.xml?lang=en
     /// </summary>
-    [Description("history/engines/{0}/markets/{1}/.*?{2}/columns")]
-    Heemmscolumns = 789,
+    [Description("engines/{0}/markets")]
+    EEM,
 
     /// <summary>
-    ///     engines/[engine]/markets
+    ///     Get the description of columns in requests for market tradesExample: https://iss.moex.com/iss/engines/stock/markets/shares/trades/columns.xml?lang=en
     /// </summary>
-    [Description("engines/{0}/markets")] Eem = 42,
+    [Description("engines/{0}/markets/{1}/trades/columns")]
+    EEMMTC,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/.*?trades/columns
-    /// </summary>
-    [Description("engines/{0}/markets/{1}/.*?trades/columns")]
-    Eemmtc = 97,
-
-    /// <summary>
-    ///     engines/[engine]/markets/[market]
+    ///     Get the list of boards, board groups and metadata for all the table fields returned by other requests.Example: https://iss.moex.com/iss/engines/stock/markets/shares.xml?lang=en
     /// </summary>
     [Description("engines/{0}/markets/{1}")]
-    Eemm = 44,
+    EEMM,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/securities
+    ///     Get metadata and market data for all the securities on the specified market.Example: https://iss.moex.com/iss/engines/stock/markets/shares/securities.xml?lang=en
     /// </summary>
     [Description("engines/{0}/markets/{1}/securities")]
-    ListSecuritiesInMarket = 33,
+    EnginesEMMS,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/securities/[security]
+    ///     Get metadata and market data for the specified security on the specified market.Example: https://iss.moex.com/iss/engines/stock/markets/shares/securities/AFLT.xml?lang=en
     /// </summary>
     [Description("engines/{0}/markets/{1}/securities/{2}")]
-    Eemmss = 52,
+    EEMMSS,
 
     /// <summary>
     ///     statistics/engines/stock/securitieslisting
     /// </summary>
     [Description("statistics/engines/stock/securitieslisting")]
-    Sess = 841,
+    SESS,
 
     /// <summary>
     ///     statistics/engines/stock/markets/index/analytics/columns
     /// </summary>
     [Description("statistics/engines/stock/markets/index/analytics/columns")]
-    Sesmiac = 205,
+    SESMIAC,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/securities/[security]/trades
+    ///     Get all trades with the specified security on the specified market.Example: https://iss.moex.com/iss/engines/stock/markets/shares/securities/AFLT/trades.xml
     /// </summary>
     [Description("engines/{0}/markets/{1}/securities/{2}/trades")]
-    Eemmsst = 55,
+    EEMMSST,
 
     /// <summary>
     ///     statistics/engines/stock/markets/index/bulletins
     /// </summary>
     [Description("statistics/engines/stock/markets/index/bulletins")]
-    Sesmib = 839,
+    SESMIB,
 
     /// <summary>
     ///     statistics/engines/stock/markets/index/rusfar
     /// </summary>
     [Description("statistics/engines/stock/markets/index/rusfar")]
-    Sesmir = 843,
+    SESMIR,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/securities/[security]/orderbook
+    ///     Get orderbook for the specified security on the specified market.Example: https://iss.moex.com/iss/engines/stock/markets/shares/securities/AFLT/orderbook.xml
     /// </summary>
     [Description("engines/{0}/markets/{1}/securities/{2}/orderbook")]
-    Eemmsso = 54,
+    EEMMSSO,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/trades
+    ///     Get all trades from the specified market.Example: https://iss.moex.com/iss/engines/stock/markets/shares/trades.xml
     /// </summary>
     [Description("engines/{0}/markets/{1}/trades")]
-    Eemmtrades = 35,
+    EnginesEMMT,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/orderbook
+    ///     Get orderbooks for all the securities on the specified market.Example: https://iss.moex.com/iss/engines/stock/markets/shares/orderbook.xml?lang=en
     /// </summary>
     [Description("engines/{0}/markets/{1}/orderbook")]
-    Eemmo = 36,
+    EEMMO,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boards
+    ///     Get the list of boards on the specified market.Example: https://iss.moex.com/iss/engines/stock/markets/shares/boards.xml?lang=en
     /// </summary>
     [Description("engines/{0}/markets/{1}/boards")]
-    Eemmb = 43,
+    EEMMB,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boards/[board]
+    ///     Get description of the specified board.Example: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR.xml?lang=en
     /// </summary>
     [Description("engines/{0}/markets/{1}/boards/{2}")]
-    Eemmbb = 49,
+    EEMMBB,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boards/[board]/securities
+    ///     Get metadata and market data for the specified security traded on the specified board.Example: https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities.xml?lang=en
     /// </summary>
     [Description("engines/{0}/markets/{1}/boards/{2}/securities")]
-    Eemmbbs = 32,
+    EEMMBBS,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boards/[board]/securities/[security]
+    ///     Get data for the specified security on the specified board.
     /// </summary>
     [Description("engines/{0}/markets/{1}/boards/{2}/securities/{3}")]
-    Eemmbbss = 53,
+    EEMMBBSS,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boards/[board]/securities/[security]/trades
+    ///     Get all trades with the specified security on the specified board.
     /// </summary>
     [Description("engines/{0}/markets/{1}/boards/{2}/securities/{3}/trades")]
-    Eemmbbsst = 56,
+    EEMMBBSST,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boards/[board]/securities/[security]/orderbook
+    ///     Get the best quotes for the specified security on the specified board.
     /// </summary>
     [Description("engines/{0}/markets/{1}/boards/{2}/securities/{3}/orderbook")]
-    Eemmbbsso = 57,
+    EEMMBBSSO,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/securities/[security]/candles
+    ///     Get data for candlestick charts for the specified security.
     /// </summary>
     [Description("engines/{0}/markets/{1}/securities/{2}/candles")]
-    Eemmssc = 155,
+    EEMMSSC,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/securities/[security]/candleborders
+    ///     engines/{0}/markets/{1}/securities/{2}/candleborders
     /// </summary>
     [Description("engines/{0}/markets/{1}/securities/{2}/candleborders")]
-    Eemmsscandleborders = 156,
+    EnginesEMMSSC,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]/candleborders
+    ///     engines/{0}/markets/{1}/boardgroups/{2}/securities/{3}/candleborders
     /// </summary>
     [Description("engines/{0}/markets/{1}/boardgroups/{2}/securities/{3}/candleborders")]
-    Eemmbbssc = 158,
+    EEMMBBSSC,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]/candles
+    ///     Get data for candlestick charts for the specified security on the specified group of boards.
     /// </summary>
     [Description("engines/{0}/markets/{1}/boardgroups/{2}/securities/{3}/candles")]
-    Eemmboardgroupsbsscandles = 157,
+    EnginesEMMBBSSC,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boards/[board]/securities/[security]/candles
+    ///     Get data for candlestick charts for the specified security on the specified board.
     /// </summary>
     [Description("engines/{0}/markets/{1}/boards/{2}/securities/{3}/candles")]
-    Eemmbbsscandles = 46,
+    EnginesEngineMMBBSSC,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boards/[board]/securities/[security]/candleborders
+    ///     Get available intervals and dates for candlestick charts.
     /// </summary>
     [Description("engines/{0}/markets/{1}/boards/{2}/securities/{3}/candleborders")]
-    Eemmbbsscandleborders = 48,
+    EnginesEngineMarketsMBBSSC,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boards/[board]/trades
+    ///     Get all trades from the specified board.
     /// </summary>
     [Description("engines/{0}/markets/{1}/boards/{2}/trades")]
-    Eemmbbt = 34,
+    EEMMBBT,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boards/[board]/orderbook
+    ///     Get the best quotes for the specified board.
     /// </summary>
     [Description("engines/{0}/markets/{1}/boards/{2}/orderbook")]
-    Eemmbbo = 39,
+    EEMMBBO,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boardgroups
+    ///     Get the list of board groups
     /// </summary>
     [Description("engines/{0}/markets/{1}/boardgroups")]
-    Eemmboardgroups = 45,
+    EnginesEMMB,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boardgroups/[boardgroup]
+    ///     Get description of the board group
     /// </summary>
     [Description("engines/{0}/markets/{1}/boardgroups/{2}")]
-    Eemmbboardgroup = 50,
+    EnginesEMMBB,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities
+    ///     Get the list of all securities traded on the specified board group.
     /// </summary>
     [Description("engines/{0}/markets/{1}/boardgroups/{2}/securities")]
-    Eemmbbsecurities = 29,
+    EnginesEMMBBS,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]
+    ///     Get metadata and market data for the specified security traded on the specified board group.
     /// </summary>
     [Description("engines/{0}/markets/{1}/boardgroups/{2}/securities/{3}")]
-    Eemmbbssecurity = 58,
+    EnginesEMMBBSS,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]/trades
+    ///     Get all trades for the specified security traded on the specified board group.
     /// </summary>
-    [Description("engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]/trades")]
-    Eemmbbsstrades = 60,
+    [Description("engines/{0}/markets/{1}/boardgroups/{2}/securities/{3}/trades")]
+    EnginesEMMBBSST,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]/orderbook
+    ///     Get the best quotes for the specified security traded on the specified board group.
     /// </summary>
-    [Description("engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]/orderbook")]
-    Eemmbbssorderbook = 59,
+    [Description("engines/{0}/markets/{1}/boardgroups/{2}/securities/{3}/orderbook")]
+    EnginesEMMBBSSO,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boardgroups/[boardgroup]/trades
+    ///     Get all trades from the specified board group.
     /// </summary>
-    [Description("engines/[engine]/markets/[market]/boardgroups/[boardgroup]/trades")]
-    Eemmbbtrades = 37,
+    [Description("engines/{0}/markets/{1}/boardgroups/{2}/trades")]
+    EnginesEMMBBT,
 
     /// <summary>
-    ///     engines/[engine]/markets/[market]/boardgroups/[boardgroup]/orderbook
+    ///     Get the best quotes for the specified board group
     /// </summary>
-    [Description("engines/[engine]/markets/[market]/boardgroups/[boardgroup]/orderbook")]
-    Eemmbborderbook = 38,
+    [Description("engines/{0}/markets/{1}/boardgroups/{2}/orderbook")]
+    EnginesEMMBBO,
 
     /// <summary>
-    ///     history/engines/stock/markets/shares/securities/changeover
+    ///     Security ID change log
     /// </summary>
     [Description("history/engines/stock/markets/shares/securities/changeover")]
-    Hesmssc = 123,
+    HESMSSC,
 
     /// <summary>
     ///     history/engines/stock/zcyc
     /// </summary>
     [Description("history/engines/stock/zcyc")]
-    Hesz = 783,
+    HESZ,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/securities
+    ///     Get trade results for all the securities on the specified market on the specified date.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/securities")]
-    Heemmsecurities = 62,
+    [Description("history/engines/{0}/markets/{1}/securities")]
+    HistoryEEMMS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/yields
+    ///     Get trade yields for all the securities on the specified board for the specified date.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/yields")]
-    Heemmy = 791,
+    [Description("history/engines/{0}/markets/{1}/yields")]
+    HEEMMY,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/dates
+    ///     Get dates for which history on the specified market is available.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/dates")]
-    Heemmd = 83,
+    [Description("history/engines/{0}/markets/{1}/dates")]
+    HEEMMD,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/securities/[security]
+    ///     Get trade results for one security for the specified date range.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/securities/[security]")]
-    Heemmss = 63,
+    [Description("history/engines/{0}/markets/{1}/securities/{2}")]
+    HEEMMSS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/yields/[security]
+    ///     Get trade yields for one security for the specified date range.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/yields/[security]")]
-    Heemmys = 793,
+    [Description("history/engines/{0}/markets/{1}/yields/{2}")]
+    HEEMMYS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/securities/[security]/dates
+    ///     Get dates for which history for the specified security on the specified market is available.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/securities/[security]/dates")]
-    Heemmssd = 61,
+    [Description("history/engines/{0}/markets/{1}/securities/{2}/dates")]
+    HEEMMSSD,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boards/[board]/dates
+    ///     Get dates for which history for the board is available.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boards/[board]/dates")]
-    Heemmbbd = 26,
+    [Description("history/engines/{0}/markets/{1}/boards/{2}/dates")]
+    HEEMMBBD,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boards/[board]/securities
+    ///     Get trade results for all the securities on the specified board for the specified date.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boards/[board]/securities")]
-    Heemmbbs = 64,
+    [Description("history/engines/{0}/markets/{1}/boards/{2}/securities")]
+    HEEMMBBS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boards/[board]/yields
+    ///     Get trade yields for all the securities on the specified board for the specified date.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boards/[board]/yields")]
-    Heemmbby = 795,
+    [Description("history/engines/{0}/markets/{1}/boards/{2}/yields")]
+    HEEMMBBY,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boards/[board]/securities/[security]
+    ///     Get trade results for the specified security on the specified board for the specified date interval.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boards/[board]/securities/[security]")]
-    Heemmbbss = 65,
+    [Description("history/engines/{0}/markets/{1}/boards/{2}/securities/{3}")]
+    HEEMMBBSS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boards/[board]/yields/[security]
+    ///     Get trade yields for the specified security on the specified board for the specified date interval.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boards/[board]/yields/[security]")]
-    Heemmbbys = 797,
+    [Description("history/engines/{0}/markets/{1}/boards/{2}/yields/{3}")]
+    HEEMMBBYS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boards/[board]/securities/[security]/dates
+    ///     Get dates for which history for the specified security on the specified board is available.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boards/[board]/securities/[security]/dates")]
-    Heemmbbssd = 66,
+    [Description("history/engines/{0}/markets/{1}/boards/{2}/securities/{3}/dates")]
+    HEEMMBBSSD,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/dates
+    ///     Get dates for which history for the specified board group is available.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/dates")]
-    Heemmbbdates = 51,
+    [Description("history/engines/{0}/markets/{1}/boardgroups/{2}/dates")]
+    HistoryEEMMBBD,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities
+    ///     history/engines/{0}/markets/{1}/boardgroups/{2}/securities
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities")]
-    Heemmbbsecurities = 152,
+    [Description("history/engines/{0}/markets/{1}/boardgroups/{2}/securities")]
+    HistoryEEMMBBS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]
+    ///     history/engines/{0}/markets/{1}/boardgroups/{2}/securities/{3}
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]")]
-    DarkpoolAuctionHistoryDateRange = 153,
+    [Description("history/engines/{0}/markets/{1}/boardgroups/{2}/securities/{3}")]
+    HistoryEEMMBBSS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities
+    ///     Get trade results for all the securities on the specified board group for the specified date.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities")]
-    HeemmbbsByDate = 67,
+    [Description("history/engines/{0}/markets/{1}/boardgroups/{2}/securities")]
+    HistoryEnginesEMMBBS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/yields
+    ///     Get trade results for all the securities on the specified board group for the specified date.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/yields")]
-    Heemmbbyields = 799,
+    [Description("history/engines/{0}/markets/{1}/boardgroups/{2}/yields")]
+    HistoryEEMMBBY,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]
+    ///     Get trade results for the specified security on the specified board group for the specified date.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]")]
-    Heemmbbssecurity = 68,
+    [Description("history/engines/{0}/markets/{1}/boardgroups/{2}/securities/{3}")]
+    HistoryEnginesEMMBBSS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/yields/[security]
+    ///     Get trade yields for the specified security on the specified board group for the specified date.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/yields/[security]")]
-    Heemmbbysecurity = 801,
+    [Description("history/engines/{0}/markets/{1}/boardgroups/{2}/yields/{3}")]
+    HistoryEEMMBBYS,
 
     /// <summary>
-    ///     history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]/dates
+    ///     Get dates for which history for the specified security on the specified board group is available.
     /// </summary>
-    [Description("history/engines/[engine]/markets/[market]/boardgroups/[boardgroup]/securities/[security]/dates")]
-    Heemmbbssdates = 69,
+    [Description("history/engines/{0}/markets/{1}/boardgroups/{2}/securities/{3}/dates")]
+    HistoryEEMMBBSSD,
 
     /// <summary>
-    ///     archives/engines/[engine]/markets/[market]/[datatype]/years
+    ///     Get the list of years that have archives with trade lists and market data.datatype can be set to securities or trades. 
     /// </summary>
-    [Description("archives/engines/[engine]/markets/[market]/[datatype]/years")]
-    Aeemmdy = 114,
+    [Description("archives/engines/{0}/markets/{1}/{2}/years")]
+    AEEMMDY,
 
     /// <summary>
-    ///     archives/engines/[engine]/markets/[market]/[datatype]/[period]
+    ///     Get the list of links to the yearly/monthly/daily archives of trade lists and market data.datatype can be set to securities or trades. period can be set to yearly, monthly or daily.Daily data is stored for the last 30 days only.
     /// </summary>
-    [Description("archives/engines/[engine]/markets/[market]/[datatype]/[period]")]
-    Aeemmdp = 116,
+    [Description("archives/engines/{0}/markets/{1}/{2}/{3}")]
+    AEEMMDP,
 
     /// <summary>
-    ///     archives/engines/[engine]/markets/[market]/[datatype]/years/[year]/months
+    ///     Get the list of months in a given year that have archives with trade lists and market data.datatype can be set to securities or trades. 
     /// </summary>
-    [Description("archives/engines/[engine]/markets/[market]/[datatype]/years/[year]/months")]
-    Aeemmdyym = 115,
+    [Description("archives/engines/{0}/markets/{1}/{2}/years/{3}/months")]
+    AEEMMDYYM,
 
     /// <summary>
-    ///     securitygroups
+    ///     Securities groups
     /// </summary>
-    [Description("securitygroups")] Securitygroups = 127,
+    [Description("securitygroups")]
+    Securitygroups,
 
     /// <summary>
-    ///     securitygroups/[securitygroup]
+    ///     Securities group
     /// </summary>
-    [Description("securitygroups/[securitygroup]")]
-    Ssecuritygroup = 128,
+    [Description("securitygroups/{0}")]
+    SecuritygroupsS,
 
     /// <summary>
-    ///     securitygroups/[securitygroup]/collections
+    ///     Securities collections in security group
     /// </summary>
-    [Description("securitygroups/[securitygroup]/collections")]
-    Ssc = 129,
+    [Description("securitygroups/{0}/collections")]
+    SSC,
 
     /// <summary>
-    ///     securitygroups/[securitygroup]/collections/[collection]
+    ///     Securities collection in security group
     /// </summary>
-    [Description("securitygroups/[securitygroup]/collections/[collection]")]
-    Sscc = 130,
+    [Description("securitygroups/{0}/collections/{1}")]
+    SSCC,
 
     /// <summary>
-    ///     securitygroups/[securitygroup]/collections/[collection]/securities
+    ///     Securities description
     /// </summary>
     [Description("securitygroups/{0}/collections/{1}/securities")]
-    Ssccs = 131,
+    SSCCS,
 
     /// <summary>
-    ///     securitytypes
+    ///     Securities types
     /// </summary>
-    [Description("securitytypes")] Securitytypes = 132,
+    [Description("securitytypes")]
+    Securitytypes,
 
     /// <summary>
-    ///     securitytypes/[securitytype]
+    ///     Dictionary: security type
     /// </summary>
-    [Description("securitytypes/[securitytype]")]
-    Ssecuritytype = 133,
+    [Description("securitytypes/{0}")]
+    SecuritytypesS,
 
     /// <summary>
     ///     statistics/engines/futures/markets/options/assets
     /// </summary>
     [Description("statistics/engines/futures/markets/options/assets")]
-    Sefmoa = 873,
+    SEFMOA,
 
     /// <summary>
-    ///     statistics/engines/futures/markets/options/assets/[asset]
+    ///     statistics/engines/futures/markets/options/assets/{0}
     /// </summary>
-    [Description("statistics/engines/futures/markets/options/assets/[asset]")]
-    Sefmoaa = 877,
+    [Description("statistics/engines/futures/markets/options/assets/{0}")]
+    SEFMOAA,
 
     /// <summary>
-    ///     statistics/engines/futures/markets/options/assets/[asset]/volumes
+    ///     statistics/engines/futures/markets/options/assets/{0}/volumes
     /// </summary>
-    [Description("statistics/engines/futures/markets/options/assets/[asset]/volumes")]
-    Sefmoaav = 879,
+    [Description("statistics/engines/futures/markets/options/assets/{0}/volumes")]
+    SEFMOAAV,
 
     /// <summary>
-    ///     statistics/engines/futures/markets/options/assets/[asset]/optionboard
+    ///     statistics/engines/futures/markets/options/assets/{0}/optionboard
     /// </summary>
-    [Description("statistics/engines/futures/markets/options/assets/[asset]/optionboard")]
-    Sefmoaaoptionboard = 881,
+    [Description("statistics/engines/futures/markets/options/assets/{0}/optionboard")]
+    SEFMOAAO,
 
     /// <summary>
-    ///     statistics/engines/futures/markets/options/assets/[asset]/openpositions
+    ///     statistics/engines/futures/markets/options/assets/{0}/openpositions
     /// </summary>
-    [Description("statistics/engines/futures/markets/options/assets/[asset]/openpositions")]
-    Sefmoaaopenpositions = 883,
+    [Description("statistics/engines/futures/markets/options/assets/{0}/openpositions")]
+    StatisticsEFMOAAO,
 
     /// <summary>
-    ///     statistics/engines/futures/markets/options/assets/[asset]/turnovers
+    ///     statistics/engines/futures/markets/options/assets/{0}/turnovers
     /// </summary>
-    [Description("statistics/engines/futures/markets/options/assets/[asset]/turnovers")]
-    Sefmoaat = 885,
-
-    /// <summary>
-    ///     analyticalproducts/curves/securities
-    /// </summary>
-    [Description("analyticalproducts/curves/securities")]
-    Acs = 859,
-
-    /// <summary>
-    ///     analyticalproducts/curves/securities/[security]
-    /// </summary>
-    [Description("analyticalproducts/curves/securities/[security]")]
-    Acss = 861,
+    [Description("statistics/engines/futures/markets/options/assets/{0}/turnovers")]
+    SEFMOAAT,
 
     /// <summary>
     ///     statistics/engines/stock/markets/shares/correlations
     /// </summary>
     [Description("statistics/engines/stock/markets/shares/correlations")]
-    Sesmsc = 172,
+    SESMSC,
 
     /// <summary>
     ///     statistics/engines/currency/markets/selt/rates
     /// </summary>
     [Description("statistics/engines/currency/markets/selt/rates")]
-    Secmsr = 168,
+    SECMSR,
 
     /// <summary>
     ///     statistics/engines/stock/splits
     /// </summary>
     [Description("statistics/engines/stock/splits")]
-    Sessplits = 758,
+    StatisticsESS,
 
     /// <summary>
-    ///     statistics/engines/stock/splits/[security]
+    ///     statistics/engines/stock/splits/{0}
     /// </summary>
-    [Description("statistics/engines/stock/splits/[security]")]
-    Sesss = 759,
+    [Description("statistics/engines/stock/splits/{0}")]
+    SESSS,
 
     /// <summary>
     ///     statistics/engines/state/markets/repo/mirp
     /// </summary>
     [Description("statistics/engines/state/markets/repo/mirp")]
-    Sesmrm = 165,
+    SESMRM,
 
     /// <summary>
     ///     statistics/engines/state/markets/repo/dealers
     /// </summary>
     [Description("statistics/engines/state/markets/repo/dealers")]
-    Sesmrd = 166,
+    SESMRD,
 
     /// <summary>
     ///     statistics/engines/state/markets/repo/cboper
     /// </summary>
     [Description("statistics/engines/state/markets/repo/cboper")]
-    Sesmrc = 169,
+    SESMRC,
 
     /// <summary>
     ///     statistics/engines/stock/deviationcoeffs
     /// </summary>
     [Description("statistics/engines/stock/deviationcoeffs")]
-    Sesd = 134,
+    SESD,
 
     /// <summary>
     ///     statistics/engines/stock/quotedsecurities
     /// </summary>
     [Description("statistics/engines/stock/quotedsecurities")]
-    Sesq = 171,
+    SESQ,
 
     /// <summary>
     ///     statistics/engines/stock/currentprices
     /// </summary>
     [Description("statistics/engines/stock/currentprices")]
-    Sesc = 649,
+    SESC,
 
     /// <summary>
-    ///     sitenews
+    ///     statistics/engines/stock/markets/bonds/monthendaccints
     /// </summary>
-    [Description("sitenews")] Sitenews = 191,
+    [Description("statistics/engines/stock/markets/bonds/monthendaccints")]
+    SESMBM,
 
     /// <summary>
-    ///     sitenews/[news_id]
+    ///     Exchange news
     /// </summary>
-    [Description("sitenews/[news_id]")] Sn = 192,
+    [Description("sitenews")]
+    Sitenews,
 
     /// <summary>
-    ///     events
+    ///     A site news
     /// </summary>
-    [Description("events")] Events = 193,
+    [Description("sitenews/{0}")]
+    SN,
 
     /// <summary>
-    ///     events/[event_id]
+    ///     Exchange activities
     /// </summary>
-    [Description("events/[event_id]")] Eei = 194,
+    [Description("events")]
+    Events,
+
+    /// <summary>
+    ///     Exchange activity content
+    /// </summary>
+    [Description("events/{0}")]
+    EventsE,
 
     /// <summary>
     ///     statistics/engines/stock/markets/bonds/aggregates
     /// </summary>
     [Description("statistics/engines/stock/markets/bonds/aggregates")]
-    Sesmba = 195,
+    SESMBA,
 
     /// <summary>
     ///     statistics/engines/stock/markets/bonds/aggregates/columns
     /// </summary>
     [Description("statistics/engines/stock/markets/bonds/aggregates/columns")]
-    Sesmbac = 196,
+    SESMBAC,
 
     /// <summary>
     ///     statistics/engines/stock/markets/index/analytics
     /// </summary>
     [Description("statistics/engines/stock/markets/index/analytics")]
-    Sesmia = 146,
+    SESMIA,
 
     /// <summary>
-    ///     statistics/engines/stock/markets/index/analytics/[indexid]
+    ///     statistics/engines/stock/markets/index/analytics/{0}
     /// </summary>
-    [Description("statistics/engines/stock/markets/index/analytics/[indexid]")]
-    Sesmiai = 147,
+    [Description("statistics/engines/stock/markets/index/analytics/{0}")]
+    SESMIAI,
 
     /// <summary>
-    ///     statistics/engines/stock/markets/index/analytics/[indexid]/tickers
+    ///     statistics/engines/stock/markets/index/analytics/{0}/tickers
     /// </summary>
-    [Description("statistics/engines/stock/markets/index/analytics/[indexid]/tickers")]
-    Sesmiait = 148,
+    [Description("statistics/engines/stock/markets/index/analytics/{0}/tickers")]
+    SESMIAIT,
 
     /// <summary>
-    ///     statistics/engines/stock/markets/index/analytics/[indexid]/tickers/[ticker]
+    ///     statistics/engines/stock/markets/index/analytics/{0}/tickers/{1}
     /// </summary>
-    [Description("statistics/engines/stock/markets/index/analytics/[indexid]/tickers/[ticker]")]
-    Sesmiaitt = 149,
+    [Description("statistics/engines/stock/markets/index/analytics/{0}/tickers/{1}")]
+    SESMIAITT,
 
     /// <summary>
-    ///     statistics/engines/stock/capitalization
+    ///     Stock market capitalization
     /// </summary>
     [Description("statistics/engines/stock/capitalization")]
-    Sescapital = 159,
+    StatisticsESC,
 
     /// <summary>
     ///     history/engines/stock/totals/boards
     /// </summary>
     [Description("history/engines/stock/totals/boards")]
-    Hestb = 161,
+    HESTB,
 
     /// <summary>
     ///     history/engines/stock/totals/securities
     /// </summary>
     [Description("history/engines/stock/totals/securities")]
-    Hests = 162,
+    HESTS,
 
     /// <summary>
-    ///     history/engines/stock/totals/boards/[board]/securities
+    ///     history/engines/stock/totals/boards/{0}/securities
     /// </summary>
-    [Description("history/engines/stock/totals/boards/[board]/securities")]
-    Hestbbs = 163,
+    [Description("history/engines/stock/totals/boards/{0}/securities")]
+    HESTBBS,
 
     /// <summary>
-    ///     history/engines/stock/totals/boards/[board]/securities/[security]
+    ///     history/engines/stock/totals/boards/{0}/securities/{1}
     /// </summary>
-    [Description("history/engines/stock/totals/boards/[board]/securities/[security]")]
-    Hestbbss = 164,
+    [Description("history/engines/stock/totals/boards/{0}/securities/{1}")]
+    HESTBBSS,
 
     /// <summary>
-    ///     rms/engines/[engine]/objects/irr
+    ///     rms/engines/{0}/objects/irr
     /// </summary>
-    [Description("rms/engines/[engine]/objects/irr")]
-    Reeoi = 764,
+    [Description("rms/engines/{0}/objects/irr")]
+    REEOI,
 
     /// <summary>
-    ///     rms/engines/[engine]/objects/irr/filters
+    ///     rms/engines/{0}/objects/irr/filters
     /// </summary>
-    [Description("rms/engines/[engine]/objects/irr/filters")]
-    Reeoif = 766,
+    [Description("rms/engines/{0}/objects/irr/filters")]
+    REEOIF,
+
+    /// <summary>
+    ///     rms/engines/{0}/objects/settlementscalendar
+    /// </summary>
+    [Description("rms/engines/{0}/objects/settlementscalendar")]
+    REEOS,
 
     /// <summary>
     ///     statistics/engines/state/rates
     /// </summary>
     [Description("statistics/engines/state/rates")]
-    Sesr = 178,
+    SESR,
 
     /// <summary>
     ///     statistics/engines/state/rates/columns
     /// </summary>
     [Description("statistics/engines/state/rates/columns")]
-    Sesrc = 179,
+    SESRC,
 
     /// <summary>
-    ///     statistics/engines/[engine]/derivatives/[report_name]
+    ///     statistics/engines/{0}/derivatives/{1}
     /// </summary>
-    [Description("statistics/engines/[engine]/derivatives/[report_name]")]
-    Seedr = 219,
+    [Description("statistics/engines/{0}/derivatives/{1}")]
+    SEEDR,
 
     /// <summary>
-    ///     statistics/engines/[engine]/monthly/[report_name]
+    ///     statistics/engines/{0}/monthly/{1}
     /// </summary>
-    [Description("statistics/engines/[engine]/monthly/[report_name]")]
-    Seemr = 220,
+    [Description("statistics/engines/{0}/monthly/{1}")]
+    SEEMR,
 
     /// <summary>
-    ///     statistics/engines/currency/markets/fixing/[security]
+    ///     statistics/engines/currency/markets/fixing/{0}
     /// </summary>
-    [Description("statistics/engines/currency/markets/fixing/[security]")]
-    Secmfs = 715,
+    [Description("statistics/engines/currency/markets/fixing/{0}")]
+    SECMFS,
 
     /// <summary>
     ///     statistics/engines/futures/markets/indicativerates/securities
     /// </summary>
     [Description("statistics/engines/futures/markets/indicativerates/securities")]
-    Sefmis = 711,
+    SEFMIS,
 
     /// <summary>
-    ///     statistics/engines/futures/markets/indicativerates/securities/[security]
+    ///     statistics/engines/futures/markets/indicativerates/securities/{0}
     /// </summary>
-    [Description("statistics/engines/futures/markets/indicativerates/securities/[security]")]
-    Sefmiss = 712,
+    [Description("statistics/engines/futures/markets/indicativerates/securities/{0}")]
+    SEFMISS,
 
     /// <summary>
     ///     statistics/engines/currency/markets/fixing
     /// </summary>
     [Description("statistics/engines/currency/markets/fixing")]
-    Secmf = 716,
+    SECMF,
 
     /// <summary>
-    ///     statistics/engines/[engine]/markets/[market]
+    ///     statistics/engines/{0}/markets/{1}
     /// </summary>
-    [Description("statistics/engines/[engine]/markets/[market]")]
-    Seemm = 771,
+    [Description("statistics/engines/{0}/markets/{1}")]
+    SEEMM,
 
     /// <summary>
-    ///     statistics/engines/[engine]/markets/[market]/securities
+    ///     statistics/engines/{0}/markets/{1}/securities
     /// </summary>
-    [Description("statistics/engines/[engine]/markets/[market]/securities")]
-    Seemms = 773,
+    [Description("statistics/engines/{0}/markets/{1}/securities")]
+    SEEMMS,
 
     /// <summary>
-    ///     statistics/engines/[engine]/markets/[market]/securities/[security]
+    ///     statistics/engines/{0}/markets/{1}/securities/{2}
     /// </summary>
-    [Description("statistics/engines/[engine]/markets/[market]/securities/[security]")]
-    Seemmss = 775,
+    [Description("statistics/engines/{0}/markets/{1}/securities/{2}")]
+    SEEMMSS,
 
     /// <summary>
     ///     analyticalproducts/netflow2/securities
     /// </summary>
     [Description("analyticalproducts/netflow2/securities")]
-    Ans = 767,
+    ANS,
 
     /// <summary>
-    ///     analyticalproducts/netflow2/securities/[security]
+    ///     analyticalproducts/netflow2/securities/{0}
     /// </summary>
-    [Description("analyticalproducts/netflow2/securities/[security]")]
-    Anss = 769,
+    [Description("analyticalproducts/netflow2/securities/{0}")]
+    ANSS,
 
     /// <summary>
     ///     analyticalproducts/futoi/securities
     /// </summary>
     [Description("analyticalproducts/futoi/securities")]
-    Afs = 807,
+    AFS,
 
     /// <summary>
-    ///     analyticalproducts/futoi/securities/[security]
+    ///     analyticalproducts/futoi/securities/{0}
     /// </summary>
-    [Description("analyticalproducts/futoi/securities/[security]")]
-    Afss = 809
+    [Description("analyticalproducts/futoi/securities/{0}")]
+    AFSS,
+
+    /// <summary>
+    ///     analyticalproducts/curves/securities
+    /// </summary>
+    [Description("analyticalproducts/curves/securities")]
+    ACS,
+
+    /// <summary>
+    ///     analyticalproducts/curves/securities/{0}
+    /// </summary>
+    [Description("analyticalproducts/curves/securities/{0}")]
+    ACSS,
+
+    /// <summary>
+    ///     sdfi/curves/securities
+    /// </summary>
+    [Description("sdfi/curves/securities")]
+    SCS,
 }

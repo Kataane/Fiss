@@ -1,6 +1,6 @@
 ﻿namespace Fiss;
 
-public enum DataType
+public enum DataType : byte
 {
     Securities,
     Trades

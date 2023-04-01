@@ -7,8 +7,8 @@ namespace Fiss;
 /// </summary>
 /// <example>
 ///     <code>
-///         var requst = new IssRequest().Securities();
-///         var longRequst = new IssRequest().History().Otc().Providers().Nsd().Markets();
+///         var request = new IssRequest().Securities();
+///         var longRequest = new IssRequest().History().Otc().Providers().Nsd().Markets();
 ///     </code>
 /// </example>
 public static partial class IssRequestExtension
@@ -40,7 +40,7 @@ public static partial class IssRequestExtension
     public static IIssRequest Rms(this IIssRequest request) => request.MethodNameToPath();
 
     public static IIssRequest Totals(this IIssRequest request) => request.MethodNameToPath();
-        
+
     public static IIssRequest Capitalization(this IIssRequest request) => request.MethodNameToPath();
 
     #region Tickers
@@ -123,11 +123,9 @@ public static partial class IssRequestExtension
 
     #region Collections
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IIssRequest Collections(this IIssRequest request) => request.MethodNameToPath();
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IIssRequest Collections(this IIssRequest request, CollectionType collectionType) => request.MethodNameToPath(additionalPath: Convert.ToInt32(collectionType).ToString());
+    public static IIssRequest Collections(this IIssRequest request, SecurityCollection securityCollection) => request.MethodNameToPath(additionalPath: Convert.ToInt32(securityCollection).ToString());
 
     #endregion
 
@@ -201,7 +199,7 @@ public static partial class IssRequestExtension
 
 	public static IIssRequest BoardGroups(this IIssRequest request) => request.MethodNameToPath();
 
-	public static IIssRequest BoardGroups(this IIssRequest request, BoardGroup boardGroup) => request.MethodNameToPath(additionalPath: boardGroup.ToString());
+	public static IIssRequest BoardGroups(this IIssRequest request, BoardGroup boardGroup) => request.MethodNameToPath(additionalPath: Convert.ToInt32(boardGroup).ToString());
 
     #endregion
 
@@ -283,18 +281,19 @@ public static partial class IssRequestExtension
 
     #endregion
 
+    /// <summary>
+    /// Adds a method name and an additional path to the existing path of the <paramref name="request"/>.
+    /// </summary>
+    /// <param name="request">The <see cref="IIssRequest"/> instance.</param>
+    /// <param name="additionalPath">The additional path to be added to the existing path.</param>
+    /// <param name="path">The name of the method being called (automatically obtained by the compiler).</param>
+    /// <returns>The updated <see cref="IIssRequest"/> instance.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static IIssRequest MethodNameToPath(this IIssRequest request, string additionalPath, [CallerMemberName] string path = "")
+    internal static IIssRequest MethodNameToPath(this IIssRequest request, string additionalPath = "", [CallerMemberName] string path = "")
     {
-        request.AddPath(path.ToLowerInvariant());
-        request.AddPath(additionalPath.ToLowerInvariant());
+        if (!string.IsNullOrEmpty(path)) request.AddPath(path.ToLowerInvariant());
+        if (!string.IsNullOrEmpty(additionalPath)) request.AddPath(additionalPath.ToLowerInvariant());
+
         return request;
     }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static IIssRequest MethodNameToPath(this IIssRequest request, [CallerMemberName] string path = "")
-	{
-		request.AddPath(path.ToLowerInvariant());
-		return request;
-	}
 }

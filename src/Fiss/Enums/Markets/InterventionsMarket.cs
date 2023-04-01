@@ -1,15 +1,15 @@
 ﻿namespace Fiss;
 
 /// <summary>
-///     Commodity interventions market of the trading system
+///     Commodity interventions market of the trading system. Belongs to the following trading system <see cref="Engine.Interventions" />.
 /// </summary>
-public enum InterventionsMarket
+/// <remarks>
+///     Do not convert to number. Only as the string path will work.
+/// </remarks>
+public enum InterventionsMarket : byte
 {
     /// <summary>
-    ///     Grain interventions
-    ///     <para>
-    ///         Belongs to the following trading system <see cref="Engine.Interventions" />.
-    ///     </para>
+    ///     Grain interventions.
     /// </summary>
     Grain = 20
 }

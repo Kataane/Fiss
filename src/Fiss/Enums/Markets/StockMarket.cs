@@ -1,111 +1,72 @@
 ﻿namespace Fiss;
 
 /// <summary>
-///     Stock and Depository Market of the trading system
+///     Stock and Depository Market of the trading system. Belongs to the following trading system: <see cref="Engine.Stock" />.
 /// </summary>
 public enum StockMarket
 {
     /// <summary>
-    ///     Stock market indices
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Stock market indices.
     /// </summary>
     Index = 5,
 
     /// <summary>
-    ///     Stock market
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Stock market.
     /// </summary>
     Shares = 1,
 
     /// <summary>
-    ///     Bond market
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Bond market.
     /// </summary>
     Bonds = 2,
 
     /// <summary>
-    ///     Negotiated deals mode
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Negotiated deals mode.
     /// </summary>
     Ndm = 4,
 
     /// <summary>
-    ///     Over-The-Counter market
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Over-The-Counter market.
     /// </summary>
     Otc = 29,
 
     /// <summary>
-    ///     Repo market with CCP
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Repo market with CCP.
     /// </summary>
     Ccp = 27,
 
     /// <summary>
-    ///     Deposits with CCP
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Deposits with CCP.
     /// </summary>
     Deposit = 35,
 
     /// <summary>
-    ///     Repo market
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Repo market.
     /// </summary>
     Repo = 3,
 
     /// <summary>
-    ///     Qualified investors market
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Qualified investors market.
     /// </summary>
     Qnv = 28,
 
     /// <summary>
-    ///     Multi-currency market of mixed assets
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Multi-currency market of mixed assets.
     /// </summary>
     Mamc = 36,
 
     /// <summary>
-    ///     Foreign securities market
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Foreign securities market.
     /// </summary>
     ForeignShares = 47,
 
     /// <summary>
-    ///     Foreign securities NDM market
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     Foreign securities NDM market.
     /// </summary>
     ForeignNdm = 49,
 
     /// <summary>
-    ///     MOEX Board
-    ///     <para>
-    ///         Belongs to the following trading system: <see cref="Engine.Stock" />.
-    ///     </para>
+    ///     MOEX Board.
     /// </summary>
-    Moex
+    MoexBoard
 }

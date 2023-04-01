@@ -3,7 +3,7 @@
 /// <summary>
 ///     Reports on currency derivatives
 /// </summary>
-public enum ReportType
+public enum ReportType : byte
 {
     /// <summary>
     ///     Information on the number of contracts on instruments that are derivative financial instruments

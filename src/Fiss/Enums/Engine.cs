@@ -3,7 +3,10 @@
 /// <summary>
 ///     Trading systems.
 /// </summary>
-public enum Engine
+/// <remarks>
+///     Do not convert to number. Only as the string path will work.
+/// </remarks>
+public enum Engine : byte
 {
     /// <summary>
     ///     Stock market and deposit market.

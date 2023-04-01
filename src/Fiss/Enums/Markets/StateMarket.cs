@@ -1,39 +1,30 @@
 ﻿namespace Fiss;
 
 /// <summary>
-///     Market of the trading system of government securities
+///     Market of the trading system of government securities. Belongs to the following trading system <see cref="Engine.State" />.
 /// </summary>
-public enum StateMarket
+/// <remarks>
+///     Do not convert to number. Only as the string path will work.
+/// </remarks>
+public enum StateMarket : byte
 {
     /// <summary>
-    ///     Government Short-Term Commitments/Federal Loan Obligations indices
-    ///     <para>
-    ///         Belongs to the following trading system <see cref="Engine.State" />.
-    ///     </para>
+    ///     Government Short-Term Commitments/Federal Loan Obligations indices.
     /// </summary>
     Index = 9,
 
     /// <summary>
-    ///     Government bonds
-    ///     <para>
-    ///         Belongs to the following trading system <see cref="Engine.State" />.
-    ///     </para>
+    ///     Government bonds.
     /// </summary>
     Bonds = 6,
 
     /// <summary>
-    ///     Interdealer repo
-    ///     <para>
-    ///         Belongs to the following trading system <see cref="Engine.State" />.
-    ///     </para>
+    ///     Interdealer repo.
     /// </summary>
     Repo = 7,
 
     /// <summary>
-    ///     Off-exchange trades
-    ///     <para>
-    ///         Belongs to the following trading system <see cref="Engine.State" />.
-    ///     </para>
+    ///     Off-exchange trades.
     /// </summary>
     Ndm = 8
 }

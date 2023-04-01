@@ -3,7 +3,7 @@
 /// <summary>
 ///     Durations of intervals.
 /// </summary>
-public enum Duration
+public enum Duration : byte
 {
     /// <summary>
     ///     One minute.

@@ -3,7 +3,7 @@
 /// <summary>
 ///     Represents the number of items to display on a page.
 /// </summary>
-public enum PageSize
+public enum PageSize : byte
 {
     /// <summary>
     ///     Displays one item per page.

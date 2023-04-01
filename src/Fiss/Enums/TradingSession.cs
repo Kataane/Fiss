@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents the trading sessions of a market.
 /// </summary>
-public enum TradingSession
+public enum TradingSession : byte
 {
     /// <summary>
     /// Morning trading session.
