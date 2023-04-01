@@ -3,9 +3,11 @@
 internal ref struct QueryOperator
 {
     public static string AddQuery(
-        Span<char> initialBuffer, string? url,
+        Span<char> initialBuffer, string url,
         IEnumerable<KeyValuePair<string, string>> queries)
     {
+        ArgumentException.ThrowIfNullOrEmpty(url);
+
         var pairs = queries.ToList();
         if (!pairs.Any()) throw new ArgumentNullException(nameof(queries));
 
@@ -39,13 +41,13 @@ internal ref struct QueryOperator
         {
             var query = queries.ElementAt(i);
             var fullQuery = query.Key + Constants.Equals + query.Value;
-            AddQuery(ref initialBuffer, fullQuery, ref pos, addAmpersand);
+            AddQueryCore(ref initialBuffer, fullQuery, ref pos, addAmpersand);
 
             if (i == 0) addAmpersand = true;
         }
     }
 
-    private static void AddQuery(ref Span<char> pool, ReadOnlySpan<char> query, ref int pos, bool addAmpersand = true)
+    private static void AddQueryCore(ref Span<char> pool, ReadOnlySpan<char> query, ref int pos, bool addAmpersand = true)
     {
         if (addAmpersand) pool[pos++] = Constants.Ampersand;
         query.CopyTo(pool.Slice(pos));
@@ -81,6 +83,6 @@ internal ref struct QueryOperator
         readOnlyChars.Slice(queryStartIndex + existedQueryLength + 1).CopyTo(chars.Slice(queryStartIndex));
 
         addQuery:
-        AddQuery(ref chars, query, ref pos);
+        AddQueryCore(ref chars, query, ref pos);
     }
 }

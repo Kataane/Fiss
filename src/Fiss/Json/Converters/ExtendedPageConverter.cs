@@ -1,12 +1,11 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Fiss.Json;
 
 internal class ExtendedPageConverter : JsonConverter<Page>
 {
-    public static ExtendedPageConverter Instance = new();
+    public static readonly ExtendedPageConverter Instance = new();
 
     public override Page Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -24,11 +23,11 @@ internal class ExtendedPageConverter : JsonConverter<Page>
 
             var jsonElement = metadataExist ? jsonProperty.Value.EnumerateArray().Skip(1).FirstOrDefault() : jsonProperty.Value;
 
-            var objects = jsonElement.Deserialize<Dictionary<string, JsonElement>[]>() ?? Enumerable.Empty<Dictionary<string, JsonElement>>();
+            var objects = jsonElement.Deserialize<List<Dictionary<string, JsonElement?>>>() ?? new List<Dictionary<string, JsonElement?>>();
 
             var columns = GetColumns(objects).ToList();
 
-            var rows = EnumerableUtilities.CreateRows(objects.Select(static dictionary => dictionary.Values), columns);
+            var rows = EnumerableUtilities.CreateRows(objects, columns);
 
             var response = new Table(columns, rows);
             responses[header] = response;
@@ -39,17 +38,21 @@ internal class ExtendedPageConverter : JsonConverter<Page>
 
     private static bool MetadataExist(JsonProperty jsonProperty)
     {
-        return jsonProperty.Value.EnumerateArray().FirstOrDefault().EnumerateObject().FirstOrDefault()
+        return jsonProperty.Value
+            .EnumerateArray().FirstOrDefault()
+            .EnumerateObject().FirstOrDefault()
             .NameEquals(Constants.Metadata.AsSpan());
     }
 
-    private static IEnumerable<Header> GetColumns(IEnumerable<Dictionary<string, JsonElement>> objects)
+    private static IEnumerable<Header> GetColumns(IEnumerable<Dictionary<string, JsonElement?>> objects)
     {
-        foreach (var key in objects.FirstOrDefault()?.Keys ?? Enumerable.Empty<string>())
+        var keys = objects.FirstOrDefault()?.Keys;
+        if (keys is null) yield break;
+
+        foreach (var key in keys)
         {
-            var readOnlySpan = key.AsSpan();
-            var s = StringUtilities.ToPascalCaseInvariant(ref readOnlySpan);
-            yield return new Header(s);
+            var column = StringUtilities.ToPascalCaseInvariant(key.AsSpan());
+            yield return new Header(column);
         }
     }
 

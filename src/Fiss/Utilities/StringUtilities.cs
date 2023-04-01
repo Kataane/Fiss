@@ -4,10 +4,10 @@ using System.Runtime.InteropServices;
 
 namespace Fiss;
 
-internal class StringUtilities
+public static class StringUtilities
 {
     [SkipLocalsInit]
-    public static string ToPascalCaseInvariant(ref ReadOnlySpan<char> s)
+    public static string ToPascalCaseInvariant(ReadOnlySpan<char> s)
     {
         if (Unsafe.IsNullRef(ref MemoryMarshal.GetReference(s))) return string.Empty;
         if (s.IsEmpty) return string.Empty;

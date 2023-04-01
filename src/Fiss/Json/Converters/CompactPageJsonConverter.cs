@@ -12,14 +12,14 @@ internal class CompactPageJsonConverter : JsonConverter<Page>
     /// <summary>
     ///     Gets an default instance of the <see cref="CompactPageJsonConverter" /> class.
     /// </summary>
-    public static CompactPageJsonConverter Instance = new();
+    public static readonly CompactPageJsonConverter Instance = new();
 
     /// <inheritdoc />
     public override Page Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var responses = new Dictionary<string, Table>();
         var columns = new List<Header>();
-        var data = new List<List<JsonElement>>();
+        var data = new List<List<JsonElement?>>();
 
         var document = JsonDocument.ParseValue(ref reader);
         var root = document.RootElement;
@@ -34,25 +34,25 @@ internal class CompactPageJsonConverter : JsonConverter<Page>
 
                 if (property.NameEquals(Constants.Columns))
                 {
+                    columns.Clear();
                     foreach (var jsonElement in property.Value.EnumerateArray())
                     {
-                        var readOnlySpan = jsonElement.GetString().AsSpan();
-                        var s = StringUtilities.ToPascalCaseInvariant(ref readOnlySpan);
+                        var s = StringUtilities.ToPascalCaseInvariant(jsonElement.GetString().AsSpan());
                         columns.Add(new Header(s));
                     }
                 }
 
                 else if (property.NameEquals(Constants.Data))
                 {
-                    data = property.Value.Deserialize<List<List<JsonElement>>>(options) ?? Enumerable.Empty<List<JsonElement>>().ToList();
+                    data = property.Value.Deserialize<List<List<JsonElement?>>>(options) ?? Enumerable.Empty<List<JsonElement?>>().ToList();
                 }
             }
 
             var rows = EnumerableUtilities.CreateRows(data, columns);
 
             var response = new Table(columns, rows);
-            ref var _value = ref CollectionsMarshal.GetValueRefOrAddDefault(responses, header, out var exist);
-            if (!exist) _value = response;
+            ref var @default = ref CollectionsMarshal.GetValueRefOrAddDefault(responses, header, out var exist);
+            if (!exist) @default = response;
         }
 
         return new Page(responses);

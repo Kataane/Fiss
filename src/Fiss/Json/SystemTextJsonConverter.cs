@@ -7,9 +7,7 @@ namespace Fiss.Json;
 /// </summary>
 public class SystemTextJsonConverter : IHttpContentSerializer
 {
-    public static SystemTextJsonConverter Instance { get; } = new();
-
-    public JsonSerializerOptions? JsonSerializerOptions { get; init; }
+    public JsonSerializerOptions? JsonSerializerOptions { get; }
 
     public SystemTextJsonConverter() : this(JsonSerializerOptions.Default)
     {

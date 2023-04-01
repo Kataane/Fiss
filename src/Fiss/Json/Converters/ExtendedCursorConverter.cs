@@ -12,7 +12,7 @@ internal class ExtendedCursorConverter : JsonConverter<Dictionary<string, Cursor
     /// <summary>
     ///     Gets an default instance of the <see cref="ExtendedCursorConverter" /> class.
     /// </summary>
-    public static ExtendedCursorConverter Instance = new();
+    public static readonly ExtendedCursorConverter Instance = new();
 
     public override Dictionary<string, Cursor> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

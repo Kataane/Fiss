@@ -5,13 +5,13 @@ internal static class Constants
     public const string Host = "https://iss.moex.com/iss";
     public const string Cursor = "cursor";
     public const string Data = "data";
-    public static string Columns = "columns";
-    public static string Metadata = "metadata";
+    public const string Columns = "columns";
+    public const string Metadata = "metadata";
 
-    public static string CharsetInfo = "charsetinfo";
+    public const string CharsetInfo = "charsetinfo";
 
-    public static string IssJson = "iss.json";
-    public static string Extended = "extended";
+    public const string IssJson = "iss.json";
+    public const string Extended = "extended";
 
     public const string Limit = "limit";
     public const string Start = "start";

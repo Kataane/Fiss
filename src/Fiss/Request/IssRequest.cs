@@ -6,13 +6,13 @@ namespace Fiss;
 public class IssRequest : IIssRequest
 {
     private readonly IssRequestOptions issRequestOptions;
+
     private volatile bool disposed;
 
     internal int PathsCountAfterSnapshot { get; private set; }
-
     internal int QueriesCountAfterSnapshot { get; private set; }
 
-    private HashSet<string?> pathsStorage = new();
+    private HashSet<string> pathsStorage = new();
     private Dictionary<string, string> queriesStorage = new();
 
     private readonly string extension;
@@ -29,14 +29,14 @@ public class IssRequest : IIssRequest
         QueriesCountAfterSnapshot = queriesStorage.Count;
     }
 
-    public void AddPath(string? path)
+    public void AddPath(string path)
     {
         ArgumentException.ThrowIfNullOrEmpty(path);
 
         pathsStorage.Add(path);
     }
 
-    public void AddPaths(IEnumerable<string?> paths)
+    public void AddPaths(IEnumerable<string> paths)
     {
         ArgumentNullException.ThrowIfNull(paths);
 
@@ -48,9 +48,9 @@ public class IssRequest : IIssRequest
         ArgumentException.ThrowIfNullOrEmpty(key);
         ArgumentException.ThrowIfNullOrEmpty(value);
 
-        ref var _value = ref CollectionsMarshal.GetValueRefOrAddDefault(queriesStorage, key, out var exist);
+        ref var @default = ref CollectionsMarshal.GetValueRefOrAddDefault(queriesStorage, key, out var exist);
 
-        if (!exist) _value = value;
+        if (!exist) @default = value;
     }
 
     public void AddQueries(IEnumerable<KeyValuePair<string, string>> queries)
@@ -88,9 +88,9 @@ public class IssRequest : IIssRequest
         ArgumentException.ThrowIfNullOrEmpty(key);
         ArgumentException.ThrowIfNullOrEmpty(value);
 
-        ref var _value = ref CollectionsMarshal.GetValueRefOrNullRef(queriesStorage, key);
+        ref var @ref = ref CollectionsMarshal.GetValueRefOrNullRef(queriesStorage, key);
 
-        if (!Unsafe.IsNullRef(ref _value)) _value = value;
+        if (!Unsafe.IsNullRef(ref @ref)) @ref = value;
     }
 
     void IIssRequest.ClearPaths()
@@ -124,10 +124,10 @@ public class IssRequest : IIssRequest
 
         defaultInterpolatedStringHandler.AppendFormatted(Constants.Question);
 
-        var _kvp = queriesStorage.First();
-        defaultInterpolatedStringHandler.AppendLiteral(_kvp.Key);
+        var keyValuePair = queriesStorage.First();
+        defaultInterpolatedStringHandler.AppendLiteral(keyValuePair.Key);
         defaultInterpolatedStringHandler.AppendFormatted(Constants.Equals);
-        defaultInterpolatedStringHandler.AppendLiteral(_kvp.Value);
+        defaultInterpolatedStringHandler.AppendLiteral(keyValuePair.Value);
 
         foreach (var kvp in queriesStorage.Skip(1))
         {
@@ -168,13 +168,12 @@ public class IssRequest : IIssRequest
                 pathsStorage.Clear();
                 break;
             case CleanBehavior.RevertSnapshotState:
-                pathsStorage = new HashSet<string?>(pathsStorage.Take(PathsCountAfterSnapshot));
+                pathsStorage = new HashSet<string>(pathsStorage.Take(PathsCountAfterSnapshot));
                 break;
             case CleanBehavior.NotClean:
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(issRequestOptions.CleanBehaviorForPaths),
-                    issRequestOptions.CleanBehaviorForPaths, null);
+                throw new ArgumentOutOfRangeException(nameof(issRequestOptions.CleanBehaviorForPaths), issRequestOptions.CleanBehaviorForPaths, null);
         }
     }
 
@@ -192,8 +191,7 @@ public class IssRequest : IIssRequest
             case CleanBehavior.NotClean:
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(issRequestOptions.CleanBehaviorForQueries),
-                    issRequestOptions.CleanBehaviorForQueries, null);
+                throw new ArgumentOutOfRangeException(nameof(issRequestOptions.CleanBehaviorForQueries), issRequestOptions.CleanBehaviorForQueries, null);
         }
     }
 }

@@ -2,8 +2,8 @@
 
 public sealed record IssRequestOptions
 {
-    public CleanBehavior CleanBehaviorForPaths { get; set; }
-    public CleanBehavior CleanBehaviorForQueries { get; set; }
+    public CleanBehavior CleanBehaviorForPaths { get; init; }
+    public CleanBehavior CleanBehaviorForQueries { get; init; }
 
-    public Format Format { get; set; }
+    public Format Format { get; init; }
 }
