@@ -46,6 +46,7 @@ jobs:
          
   publish-fiss:
     if: ${{ inputs.publish-fiss }}
+    needs: [build-dotnet]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -57,6 +58,7 @@ jobs:
           
   publish-fiss-client:
     if: ${{ inputs.publish-fiss-client }}
+    needs: [build-dotnet]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -68,7 +70,7 @@ jobs:
           
   # release
   create-release:
-    needs: [build-dotnet]
+    needs: [build-dotnet, publish-fiss, publish-fiss-client]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
