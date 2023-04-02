@@ -85,7 +85,7 @@ dotnet add package Fiss.Client
 collection.AddMoexPassportClient("NameForMoexPassportClient", IConfigurationSection);
 ```
 
-где `NameForMoexPassportClient` [уникальное](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory#named-clients) имя для клиента. `IConfigurationSection`  — [конфигурация](https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration) где хранится данные для аутентификации на Московской Бирже.
+где `NameForMoexPassportClient` [уникальное](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory#named-clients) имя для клиента. `IConfigurationSection`  — [конфигурация](https://learn.microsoft.com/en-us/dotnet/core/extensions/configuration) где хранятся данные для аутентификации на Московской Бирже.
 
 Далее необходимо получить именованный клиент: 
 ```csharp
