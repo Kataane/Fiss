@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: setup-dotnet@main
+      - uses: Kataane/Fiss/.github/actions/setup-dotnet@main
         if: ${{ inputs.nuget-push }}
 
       # Create Tag
