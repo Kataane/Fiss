@@ -58,14 +58,11 @@ jobs:
   # release
   create-release:
     needs: [build-dotnet]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: Kataane/Fiss/.github/workflows/create-release.yaml@main
-        with:
-          dry-run: ${{ inputs.dry-run }}
-          commit-id: ${{ needs.update-packagejson.outputs.sha }}
-          tag: ${{ inputs.tag }}
-          push-tag: true
-          prerelease: ${{ inputs.prerelease }}
-          nuget-push: true
+    uses: Kataane/Fiss/.github/workflows/create-release.yaml@main
+    with:
+      dry-run: ${{ inputs.dry-run }}
+      commit-id: ${{ needs.update-packagejson.outputs.sha }}
+      tag: ${{ inputs.tag }}
+      push-tag: true
+      prerelease: ${{ inputs.prerelease }}
+      nuget-push: true
