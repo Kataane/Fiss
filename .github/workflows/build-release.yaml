@@ -64,6 +64,6 @@ jobs:
       commit-id: ${{ needs.update-packagejson.outputs.sha }}
       tag: ${{ inputs.tag }}
       push-tag: true
-      prerelease: ${{ inputs.prerelease }}
+      prerelease: ${{ inputs.is-prerelease }}
       nuget-push: true
     secrets: inherit
