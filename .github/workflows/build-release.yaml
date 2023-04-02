@@ -57,7 +57,7 @@ jobs:
           path: ./publish_fiss   
           
   publish-fiss-client:
-    if: ${{ inputs.publish-fiss }}
+    if: ${{ inputs.publish-fiss-client }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
