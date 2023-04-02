@@ -70,7 +70,7 @@ jobs:
   # release
   create-release:
     needs: [build-dotnet]
-    uses: Kataane/Fiss/.github/workflows/create-release.yaml@main
+    uses: Kataane/Action/.github/workflows/create-release.yaml@main
     with:
       dry-run: ${{ inputs.dry-run }}
       commit-id: ${{ needs.update-packagejson.outputs.sha }}
