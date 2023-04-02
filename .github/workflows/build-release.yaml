@@ -69,18 +69,14 @@ jobs:
   # release
   create-release:
     needs: [build-dotnet]
-    uses: ./.github/workflows/create-release.yaml
-    with:
-      dry-run: ${{ inputs.dry-run }}
-      commit-id: ${{ needs.update-packagejson.outputs.sha }}
-      tag: ${{ inputs.tag }}
-      push-tag: true
-      prerelease: ${{ inputs.prerelease }}
-      nuget-push: true
-    secrets: inherit
-
-  deploy:
     runs-on: ubuntu-latest
-    needs: create-release
-    steps: 
-     - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/workflows/create-release.yaml
+        with:
+          dry-run: ${{ inputs.dry-run }}
+          commit-id: ${{ needs.update-packagejson.outputs.sha }}
+          tag: ${{ inputs.tag }}
+          push-tag: true
+          prerelease: ${{ inputs.prerelease }}
+          nuget-push: true
