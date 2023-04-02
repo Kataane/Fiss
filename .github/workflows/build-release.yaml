@@ -18,6 +18,11 @@ on:
         required: false
         type: boolean
         default: false
+      push-tag:
+        description: "true = push tag. false = no push tag."
+        required: false
+        type: boolean
+        default: false
       tag:
         description: "tag: git tag you want create. (sample 1.0.0)"
         required: true
@@ -63,7 +68,7 @@ jobs:
       dry-run: ${{ inputs.dry-run }}
       commit-id: ${{ needs.update-packagejson.outputs.sha }}
       tag: ${{ inputs.tag }}
-      push-tag: true
+      push-tag: ${{ inputs.push-tag }}
       prerelease: ${{ inputs.is-prerelease }}
       nuget-push: true
     secrets: inherit
