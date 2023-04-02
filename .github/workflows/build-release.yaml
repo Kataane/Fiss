@@ -13,7 +13,7 @@ on:
         required: false
         type: boolean
         default: false        
-      prerelease:
+      is-prerelease:
         description: "Is prerelease version"
         required: false
         type: boolean
@@ -43,34 +43,21 @@ jobs:
       # pack nuget
       - run: dotnet build -c Release -p:Version=${{ inputs.tag }}
       - run: dotnet test -c Release --no-build
-         
-  publish-fiss:
-    if: ${{ inputs.publish-fiss }}
-    needs: [build-dotnet]
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - run: dotnet pack -c Release --no-build -p:Version=${{ inputs.tag }} -o ./publish_fiss
+      - run: dotnet pack -c Release --no-build -p:Version=${{ inputs.tag }} -o ./publish
+      - name: pack Fiss
+        if: ${{ inputs.publish-fiss }}
+        run: dotnet pack ./src/Fiss/Fiss.csproj -c Release --no-build -p:Version=${{ inputs.tag }} -o ./publish
+      - name: pack Fiss.Client
+        if: ${{ inputs.publish-fiss-client }}
+        run: dotnet pack ./src/Fiss.Client/Fiss.Client.csproj -c Release --no-build -p:Version=${{ inputs.tag }} -o ./publish
       - uses: actions/upload-artifact@v3
         with:
           name: nuget
-          path: ./publish_fiss   
-          
-  publish-fiss-client:
-    if: ${{ inputs.publish-fiss-client }}
-    needs: [build-dotnet]
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - run: dotnet pack -c Release --no-build -p:Version=${{ inputs.tag }} -o ./publish_fiss_client
-      - uses: actions/upload-artifact@v3
-        with:
-          name: nuget
-          path: ./publish_fiss_client   
-          
+          path: ./publish   
+
   # release
   create-release:
-    needs: [build-dotnet, publish-fiss, publish-fiss-client]
+    needs: [build-dotnet]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
