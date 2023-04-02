@@ -48,7 +48,6 @@ jobs:
       # pack nuget
       - run: dotnet build -c Release -p:Version=${{ inputs.tag }}
       - run: dotnet test -c Release --no-build
-      - run: dotnet pack -c Release --no-build -p:Version=${{ inputs.tag }} -o ./publish
       - name: pack Fiss
         if: ${{ inputs.publish-fiss }}
         run: dotnet pack ./src/Fiss/Fiss.csproj -c Release --no-build -p:Version=${{ inputs.tag }} -o ./publish
